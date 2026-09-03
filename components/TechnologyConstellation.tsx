@@ -46,9 +46,9 @@ export default function TechnologyConstellation() {
     const centerX = width / 2;
     const centerY = height / 2;
 
-    let particles = Array.from({ length: 30 }).map(() => ({
+    let particles = Array.from({ length: 35 }).map(() => ({
       angle: Math.random() * Math.PI * 2,
-      radius: 80 + Math.random() * 140,
+      radius: 70 + Math.random() * 150,
       speed: 0.002 + Math.random() * 0.003,
       size: Math.random() * 1.8 + 1,
       color: "#00F2FE",
@@ -58,7 +58,7 @@ export default function TechnologyConstellation() {
       ctx.clearRect(0, 0, width, height);
 
       // Central ambient radial glow
-      const grad = ctx.createRadialGradient(centerX, centerY, 10, centerX, centerY, 220);
+      const grad = ctx.createRadialGradient(centerX, centerY, 10, centerX, centerY, 240);
       grad.addColorStop(0, "rgba(0, 242, 254, 0.08)");
       grad.addColorStop(0.5, "rgba(59, 130, 246, 0.03)");
       grad.addColorStop(1, "transparent");
@@ -99,15 +99,15 @@ export default function TechnologyConstellation() {
   return (
     <section
       id="technology"
-      className="py-20 sm:py-24 bg-[#08090E] relative overflow-hidden border-t border-white/5 min-h-[90vh] flex flex-col justify-between"
+      className="py-20 sm:py-24 bg-[#08090E] relative overflow-hidden border-t border-white/5"
     >
       {/* Background Radial Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-cyan-500/5 rounded-full blur-[150px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full flex-1 flex flex-col justify-between">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full space-y-10">
         
-        {/* Header Block */}
-        <div className="text-center max-w-3xl mx-auto mb-8">
+        {/* Top Header Block */}
+        <div className="text-center max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/20 text-cyan-400 text-xs font-mono tracking-widest uppercase mb-3">
             <Layers className="w-3.5 h-3.5 text-cyan-400" /> TECHNOLOGY CONSTELLATION
           </div>
@@ -119,8 +119,32 @@ export default function TechnologyConstellation() {
           </p>
         </div>
 
-        {/* Central Interactive Constellation Canvas & Node Map */}
-        <div className="relative w-full max-w-5xl mx-auto min-h-[380px] sm:min-h-[440px] flex items-center justify-center my-4">
+        {/* Clean Top Category Navigation Bar */}
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 max-w-4xl mx-auto">
+          {TECH_CATEGORIES.map((cat) => {
+            const isSelected = activeCategory === cat;
+            const Icon = CATEGORY_ICONS[cat];
+
+            return (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                onMouseEnter={() => setActiveCategory(cat)}
+                className={`px-4 py-2.5 rounded-2xl border text-xs font-mono font-bold tracking-wider uppercase transition-all duration-300 flex items-center gap-2 cursor-pointer ${
+                  isSelected
+                    ? "bg-[#0F111A] border-cyan-400 text-cyan-300 shadow-[0_0_20px_rgba(0,242,254,0.3)] scale-105"
+                    : "bg-white/[0.03] hover:bg-white/[0.08] border-white/10 text-slate-400 hover:text-white"
+                }`}
+              >
+                {Icon && <Icon className={`w-4 h-4 ${isSelected ? "text-cyan-400" : "text-slate-400"}`} />}
+                <span>{cat}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Central Interactive Constellation Visualization Container */}
+        <div className="relative w-full max-w-5xl mx-auto min-h-[320px] sm:min-h-[380px] flex flex-col items-center justify-center p-6 glass-panel rounded-3xl border border-white/10 bg-[#0F111A]/80 shadow-2xl overflow-hidden">
           
           {/* Background Canvas Layer */}
           <canvas
@@ -128,100 +152,51 @@ export default function TechnologyConstellation() {
             className="absolute inset-0 pointer-events-none z-0 opacity-80"
           />
 
-          {/* Central SkilledHyre Labs Core Node */}
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.8 }}
-            className="relative z-20 w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-[#0F111A] border-2 border-cyan-400/40 shadow-[0_0_50px_rgba(0,242,254,0.25)] flex flex-col items-center justify-center text-center p-2 cursor-pointer group hover:border-cyan-400 transition-colors"
-          >
-            <Sparkles className="w-5 h-5 text-cyan-400 mb-1 group-hover:rotate-12 transition-transform" />
-            <span className="font-display font-black text-xs sm:text-sm text-white tracking-wider">
-              SKILLEDHYRE
+          {/* Central SkilledHyre Labs Core Badge */}
+          <div className="relative z-10 mb-6 text-center">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-cyan-500/10 border-2 border-cyan-400/50 shadow-[0_0_35px_rgba(0,242,254,0.3)] flex flex-col items-center justify-center mx-auto mb-3">
+              <Sparkles className="w-6 h-6 text-cyan-400" />
+            </div>
+            <span className="font-display font-black text-sm sm:text-base text-white tracking-widest block uppercase">
+              SKILLEDHYRE LABS
             </span>
-            <span className="text-[9px] font-mono text-cyan-400 font-bold tracking-widest uppercase">
-              LABS
+            <span className="text-[10px] font-mono text-cyan-400 font-bold tracking-widest uppercase block mt-0.5">
+              ACTIVE NODE: {activeCategory}
             </span>
-          </motion.div>
-
-          {/* 5 Orbiting Category System Nodes */}
-          <div className="absolute inset-0 z-20 pointer-events-none flex items-center justify-center">
-            {TECH_CATEGORIES.map((cat, idx) => {
-              const total = TECH_CATEGORIES.length;
-              const angle = (idx * (2 * Math.PI)) / total - Math.PI / 2; // top origin
-              const radius = 145; // sm screen radius
-              const isSelected = activeCategory === cat;
-              const Icon = CATEGORY_ICONS[cat];
-
-              // Calculate percentage positions for responsive layout
-              const leftPercent = 50 + Math.cos(angle) * 38;
-              const topPercent = 50 + Math.sin(angle) * 38;
-
-              return (
-                <motion.button
-                  key={cat}
-                  onClick={() => setActiveCategory(cat)}
-                  onMouseEnter={() => setActiveCategory(cat)}
-                  style={{
-                    left: `${leftPercent}%`,
-                    top: `${topPercent}%`,
-                    transform: "translate(-50%, -50%)",
-                  }}
-                  className={`absolute pointer-events-auto px-3.5 py-2.5 rounded-2xl border transition-all duration-300 flex items-center gap-2 cursor-pointer shadow-lg ${
-                    isSelected
-                      ? "bg-[#0F111A] border-cyan-400 text-white shadow-[0_0_25px_rgba(0,242,254,0.35)] scale-110 z-30"
-                      : "bg-white/[0.03] hover:bg-white/[0.08] border-white/10 text-slate-400 hover:text-white"
-                  }`}
-                >
-                  {Icon && <Icon className={`w-4 h-4 ${isSelected ? "text-cyan-400" : "text-slate-400"}`} />}
-                  <span className="text-xs font-mono font-bold tracking-wider uppercase whitespace-nowrap">
-                    {cat}
-                  </span>
-                </motion.button>
-              );
-            })}
           </div>
 
-          {/* Active Category Technologies Revealed Dynamic Arc Badge Overlay */}
-          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-30 w-full max-w-xl text-center px-4">
+          {/* Active Category Technologies Revealed */}
+          <div className="relative z-10 w-full max-w-3xl text-center">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeCategory}
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
-                className="glass-panel p-4 rounded-2xl border border-cyan-400/30 bg-[#0F111A]/95 shadow-2xl backdrop-blur-md"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.25 }}
+                className="flex flex-wrap items-center justify-center gap-3"
               >
-                <div className="flex items-center justify-between gap-2 mb-2 pb-1.5 border-b border-white/10">
-                  <span className="text-[10px] font-mono font-bold text-cyan-400 tracking-widest uppercase flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-                    ACTIVE SYSTEM NODE: {activeCategory}
-                  </span>
-                  <span className="text-[10px] font-mono text-slate-400">
-                    {CATEGORY_MAP[activeCategory]?.length} Technologies
-                  </span>
-                </div>
-
-                <div className="flex flex-wrap items-center justify-center gap-2">
-                  {CATEGORY_MAP[activeCategory]?.map((techName) => (
-                    <span
-                      key={techName}
-                      className="px-3 py-1.5 rounded-xl bg-cyan-500/10 border border-cyan-400/30 text-white font-display font-semibold text-xs sm:text-sm hover:border-cyan-400 hover:bg-cyan-500/20 transition-all cursor-default"
-                    >
-                      {techName}
-                    </span>
-                  ))}
-                </div>
+                {CATEGORY_MAP[activeCategory]?.map((techName) => (
+                  <div
+                    key={techName}
+                    className="px-4 py-2.5 rounded-2xl bg-cyan-500/15 border border-cyan-400/40 text-white font-display font-bold text-sm sm:text-base shadow-[0_0_15px_rgba(0,242,254,0.15)] hover:border-cyan-400 hover:bg-cyan-500/25 transition-all cursor-default"
+                  >
+                    {techName}
+                  </div>
+                ))}
               </motion.div>
             </AnimatePresence>
           </div>
 
         </div>
 
-        {/* Compact Technology Summary Index below the Constellation */}
-        <div className="pt-8 border-t border-white/10 mt-6">
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+        {/* Clear Technology Summary Index Grid (All 19 Techs Visible) */}
+        <div className="pt-8 border-t border-white/10">
+          <h3 className="text-xs font-mono font-bold tracking-widest text-slate-400 uppercase mb-4 text-center">
+            COMPLETE ENTERPRISE STACK DIRECTORY
+          </h3>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {TECH_CATEGORIES.map((cat) => {
               const techs = CATEGORY_MAP[cat] || [];
               const isSelected = activeCategory === cat;
@@ -230,21 +205,28 @@ export default function TechnologyConstellation() {
                 <div
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
-                  className={`p-3 rounded-2xl border transition-all cursor-pointer ${
+                  onMouseEnter={() => setActiveCategory(cat)}
+                  className={`p-4 rounded-2xl border transition-all duration-300 cursor-pointer ${
                     isSelected
-                      ? "bg-cyan-500/10 border-cyan-400/40 text-cyan-300"
-                      : "bg-white/[0.02] border-white/5 text-slate-400 hover:border-white/20 hover:text-white"
+                      ? "bg-cyan-500/15 border-cyan-400/60 shadow-[0_0_20px_rgba(0,242,254,0.15)]"
+                      : "bg-white/[0.02] border-white/10 hover:border-cyan-400/30 hover:bg-white/[0.04]"
                   }`}
                 >
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-300">
+                  <div className="flex items-center gap-2 mb-2 pb-1.5 border-b border-white/10">
+                    <span className="w-2 h-2 rounded-full bg-cyan-400 shrink-0" />
+                    <span className="text-xs font-mono font-bold uppercase tracking-wider text-white">
                       {cat}
                     </span>
                   </div>
-                  <p className="text-xs font-display text-slate-200 leading-snug line-clamp-2">
-                    {techs.join(" • ")}
-                  </p>
+
+                  <ul className="space-y-1.5">
+                    {techs.map((tech) => (
+                      <li key={tech} className="text-xs font-display font-semibold text-slate-200 hover:text-cyan-300 transition-colors flex items-center gap-1.5">
+                        <span className="text-cyan-400 text-[10px]">•</span>
+                        <span>{tech}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               );
             })}
