@@ -21,6 +21,11 @@ export default function HeroSection({ onOpenProjectModal }: HeroSectionProps) {
     if (el) el.scrollIntoView({ behavior: "smooth" });
   };
 
+  const scrollToTestimonials = () => {
+    const el = document.getElementById("testimonials");
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <section id="hero" className="relative pt-32 pb-20 lg:pt-36 lg:pb-28 overflow-hidden bg-[#08090E] min-h-screen flex items-center">
       {/* Background Glow Orbs */}
@@ -33,7 +38,10 @@ export default function HeroSection({ onOpenProjectModal }: HeroSectionProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
         {/* Live System Operational Status Bar */}
         <div className="mb-8 flex items-center justify-start">
-          <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/[0.03] border border-cyan-400/30 backdrop-blur-md shadow-[0_0_20px_rgba(0,242,254,0.15)]">
+          <button
+            onClick={scrollToTestimonials}
+            className="group inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/[0.03] hover:bg-white/[0.07] border border-cyan-400/30 backdrop-blur-md shadow-[0_0_20px_rgba(0,242,254,0.15)] transition-all"
+          >
             <span className="relative flex h-2.5 w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400"></span>
@@ -42,10 +50,10 @@ export default function HeroSection({ onOpenProjectModal }: HeroSectionProps) {
               LIVE SYSTEM OPERATIONAL
             </span>
             <span className="text-slate-600 font-mono">•</span>
-            <span className="text-xs font-mono text-cyan-400 hidden sm:inline">
-              120+ AI & Engineering Deployments
+            <span className="text-xs font-mono text-cyan-400 group-hover:underline flex items-center gap-1">
+              18+ Verified Client Reviews ⭐
             </span>
-          </div>
+          </button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
@@ -111,10 +119,10 @@ export default function HeroSection({ onOpenProjectModal }: HeroSectionProps) {
                 <span className="text-xl sm:text-2xl font-display font-black text-cyan-400 block">99.99%</span>
                 <span className="text-[10px] font-mono text-slate-400">System Uptime</span>
               </div>
-              <div>
-                <span className="text-xl sm:text-2xl font-display font-black text-cyan-400 block">4.9★</span>
-                <span className="text-[10px] font-mono text-slate-400">Client Rating</span>
-              </div>
+              <button onClick={scrollToTestimonials} className="text-left group cursor-pointer">
+                <span className="text-xl sm:text-2xl font-display font-black text-amber-400 block group-hover:scale-105 transition-transform">5.0★</span>
+                <span className="text-[10px] font-mono text-cyan-400 group-hover:underline">18+ Reviews →</span>
+              </button>
             </div>
 
           </div>
