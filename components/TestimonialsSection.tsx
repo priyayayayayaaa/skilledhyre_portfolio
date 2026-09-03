@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { TESTIMONIALS, Testimonial } from "@/data/portfolioData";
-import { Star, Quote, PlusCircle, CheckCircle2, Sparkles, X, Pause, Play } from "lucide-react";
+import { Star, Quote, PlusCircle, CheckCircle2, Sparkles, X } from "lucide-react";
 import SubmitReviewModal from "./SubmitReviewModal";
 
 const CATEGORIES = ["ALL", "Digital Marketing", "AI & Automation", "Software Engineering", "Tech Talent"] as const;
@@ -72,44 +72,23 @@ export default function TestimonialsSection() {
           </div>
         </div>
 
-        {/* Category Filter Pills & Scroll Controls */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 pb-4 border-b border-white/5">
-          {/* Category Tabs */}
-          <div className="flex flex-wrap items-center gap-2">
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => {
-                  setActiveCategory(cat);
-                }}
-                className={`px-4 py-2 rounded-xl font-mono text-xs font-semibold transition-all ${
-                  activeCategory === cat
-                    ? "bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 shadow-[0_0_15px_rgba(0,242,254,0.15)]"
-                    : "bg-white/[0.03] text-slate-400 border border-white/5 hover:text-white hover:bg-white/[0.06]"
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-
-          {/* Pause / Play Motion Button */}
-          <button
-            onClick={() => setIsPaused(!isPaused)}
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.07] border border-white/10 text-xs font-mono text-slate-300 transition-colors"
-          >
-            {isPaused ? (
-              <>
-                <Play className="w-3.5 h-3.5 text-emerald-400 fill-emerald-400" />
-                <span>Resume Scrolling</span>
-              </>
-            ) : (
-              <>
-                <Pause className="w-3.5 h-3.5 text-amber-400" />
-                <span>Pause Motion</span>
-              </>
-            )}
-          </button>
+        {/* Category Filter Pills */}
+        <div className="flex flex-wrap items-center justify-start gap-2 mb-8 pb-4 border-b border-white/5">
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => {
+                setActiveCategory(cat);
+              }}
+              className={`px-4 py-2 rounded-xl font-mono text-xs font-semibold transition-all ${
+                activeCategory === cat
+                  ? "bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 shadow-[0_0_15px_rgba(0,242,254,0.15)]"
+                  : "bg-white/[0.03] text-slate-400 border border-white/5 hover:text-white hover:bg-white/[0.06]"
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
         </div>
 
         {/* Ultra-Slow Smooth Right-to-Left Floating Marquee */}
@@ -129,7 +108,7 @@ export default function TestimonialsSection() {
             animate={{ x: isPaused ? undefined : ["0%", "-50%"] }}
             transition={{
               ease: "linear",
-              duration: 85, // Ultra-slow smooth glide
+              duration: 90, // Ultra-slow smooth glide
               repeat: Infinity,
             }}
           >
