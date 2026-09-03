@@ -225,11 +225,25 @@ export default function TestimonialsSection() {
                   {/* Bottom Info: Client Avatar & Outcome Pill */}
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-6 border-t border-white/10">
                     <div className="flex items-center gap-4">
-                      <img
-                        src={current.avatar}
-                        alt={current.clientName}
-                        className="w-12 h-12 rounded-full object-cover border-2 border-cyan-400/40 shadow-md"
-                      />
+                      {current.avatar && (current.avatar.includes("-client.") || current.avatar.includes("gagandeep")) ? (
+                        <img
+                          src={current.avatar}
+                          alt={current.clientName}
+                          className="w-12 h-12 rounded-full object-cover border-2 border-cyan-400/40 shadow-md"
+                        />
+                      ) : current.companyLogo || (current.avatar && current.avatar.includes("logo")) ? (
+                        <div className="w-12 h-12 rounded-2xl bg-white p-1.5 flex items-center justify-center shrink-0 border border-white/20 shadow-md overflow-hidden">
+                          <img
+                            src={current.companyLogo || current.avatar}
+                            alt={current.companyName}
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-12 h-12 rounded-2xl bg-cyan-500/20 text-cyan-300 font-mono font-bold text-lg flex items-center justify-center border border-cyan-400/40 shrink-0">
+                          {current.companyName.charAt(0)}
+                        </div>
+                      )}
                       <div>
                         <h4 className="font-display font-bold text-base text-white flex items-center gap-2">
                           {current.clientName}
@@ -311,11 +325,25 @@ export default function TestimonialsSection() {
 
                 <div className="pt-4 border-t border-white/10 mt-6 flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <img
-                      src={item.avatar}
-                      alt={item.clientName}
-                      className="w-9 h-9 rounded-full object-cover border border-cyan-400/40"
-                    />
+                    {item.avatar && (item.avatar.includes("-client.") || item.avatar.includes("gagandeep")) ? (
+                      <img
+                        src={item.avatar}
+                        alt={item.clientName}
+                        className="w-9 h-9 rounded-full object-cover border border-cyan-400/40"
+                      />
+                    ) : item.companyLogo || (item.avatar && item.avatar.includes("logo")) ? (
+                      <div className="w-9 h-9 rounded-xl bg-white p-1 flex items-center justify-center shrink-0 border border-white/20 overflow-hidden">
+                        <img
+                          src={item.companyLogo || item.avatar}
+                          alt={item.companyName}
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-9 h-9 rounded-xl bg-cyan-500/20 text-cyan-300 font-mono font-bold text-xs flex items-center justify-center border border-cyan-400/40 shrink-0">
+                        {item.companyName.charAt(0)}
+                      </div>
+                    )}
                     <div>
                       <h4 className="font-bold text-xs text-white">{item.clientName}</h4>
                       <p className="text-[10px] font-mono text-slate-400">{item.clientTitle}</p>
