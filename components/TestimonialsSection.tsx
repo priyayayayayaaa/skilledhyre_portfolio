@@ -95,41 +95,6 @@ export default function TestimonialsSection() {
           </div>
         </div>
 
-        {/* Clean & Sleek Client Logos Horizontal Filter Pills */}
-        <div className="mb-12">
-          <p className="text-center text-xs font-mono text-slate-400 uppercase tracking-widest mb-4">
-            ENTERPRISE & CLIENT BRANDS (Select a logo to view their testimonial)
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-2.5 max-w-5xl mx-auto">
-            {CLIENT_LOGOS.map((logo) => {
-              const isSelected = current?.companyLogoText === logo.label || 
-                                 current?.companyName.toUpperCase() === logo.name.toUpperCase() ||
-                                 current?.id === logo.testimonialId;
-
-              return (
-                <button
-                  key={logo.name}
-                  onClick={() => handleLogoClick(logo.testimonialId)}
-                  className={`px-3.5 py-2 rounded-2xl border text-xs font-mono font-bold transition-all duration-300 flex items-center gap-2.5 ${
-                    isSelected
-                      ? "bg-cyan-500/15 border-cyan-400 text-cyan-300 shadow-[0_0_20px_rgba(0,242,254,0.25)] scale-105"
-                      : "bg-white/[0.03] border-white/10 text-slate-300 hover:border-cyan-400/40 hover:bg-white/[0.06] hover:text-white"
-                  }`}
-                >
-                  {logo.logoUrl ? (
-                    <div className="w-6 h-6 rounded-lg bg-white p-0.5 flex items-center justify-center shrink-0 shadow-sm overflow-hidden">
-                      <img src={logo.logoUrl} alt={logo.name} className="w-full h-full object-contain rounded" />
-                    </div>
-                  ) : (
-                    <Building2 className={`w-4 h-4 shrink-0 ${isSelected ? "text-cyan-400" : "text-slate-400"}`} />
-                  )}
-                  <span>{logo.name}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
         {/* Category Filter Pills & Mode Switcher */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 pb-4 border-b border-white/5">
           {/* Category Tabs */}
