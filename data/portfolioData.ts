@@ -707,6 +707,13 @@ export interface ClientLogoItem {
 
 export const CLIENT_LOGOS: ClientLogoItem[] = [
   {
+    name: "Vastu Infinity",
+    label: "VASTU INFINITY",
+    logoUrl: "/images/vastu-infinity-logo.png",
+    industry: "Vastu & Digital Growth",
+    testimonialId: "test-vastu-infinity",
+  },
+  {
     name: "Positive Minds",
     label: "POSITIVE MINDS",
     logoUrl: "/images/positive-minds-logo.png",
@@ -753,6 +760,21 @@ export const CLIENT_LOGOS: ClientLogoItem[] = [
 ];
 
 export const TESTIMONIALS: Testimonial[] = [
+  {
+    id: "test-vastu-infinity",
+    quote: "We had a great experience working with SkilledHyre for our Social Media Marketing and Digital Marketing requirements. Their team understood our brand well and helped us strengthen our online presence through creative content, consistent social media management, and effective digital marketing strategies. The team is professional, responsive, and dedicated to delivering quality results. We truly appreciate their efforts and support in helping Vastu Infinity grow digitally. We highly recommend SkilledHyre to businesses looking for reliable and result-oriented digital marketing and SMM services.",
+    clientName: "Vastu Infinity",
+    clientTitle: "Founder & Director",
+    companyName: "Vastu Infinity",
+    companyLogo: "/images/vastu-infinity-logo.png",
+    companyLogoText: "VASTU INFINITY",
+    metricsResult: "SMM & Digital Marketing",
+    rating: 5,
+    avatar: "/images/vastu-infinity-client.png",
+    category: "Digital Marketing",
+    verified: true,
+    date: "Sep 2026",
+  },
   {
     id: "test-positive-minds",
     quote: "Working with the team has given us a more structured approach to our digital presence. From social media and content to SEO and digital marketing, they understand our brand and consistently work towards improving our online visibility. Their communication and involvement make the collaboration smooth and productive.",
