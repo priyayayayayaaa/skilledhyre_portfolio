@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { TESTIMONIALS, Testimonial } from "@/data/portfolioData";
-import { Star, ChevronLeft, ChevronRight, Quote, PlusCircle, CheckCircle2, Sparkles, Grid, Layers, Play, ChevronDown, ChevronUp } from "lucide-react";
+import { Star, Quote, PlusCircle, CheckCircle2, Sparkles, X, Pause, Play } from "lucide-react";
 import SubmitReviewModal from "./SubmitReviewModal";
 
 const CATEGORIES = ["ALL", "Digital Marketing", "AI & Automation", "Software Engineering", "Tech Talent"] as const;
@@ -11,32 +11,22 @@ const CATEGORIES = ["ALL", "Digital Marketing", "AI & Automation", "Software Eng
 export default function TestimonialsSection() {
   const [testimonialsList, setTestimonialsList] = useState<Testimonial[]>(TESTIMONIALS);
   const [activeCategory, setActiveCategory] = useState<string>("ALL");
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
-  const [viewMode, setViewMode] = useState<"marquee" | "carousel" | "grid">("grid");
-  const [showAllInGrid, setShowAllInGrid] = useState(false);
+  const [selectedReview, setSelectedReview] = useState<Testimonial | null>(null);
+  const [isPaused, setIsPaused] = useState(false);
 
   const filteredTestimonials = testimonialsList.filter((item) =>
     activeCategory === "ALL" ? true : item.category === activeCategory
   );
 
-  const displayedGridItems = showAllInGrid ? filteredTestimonials : filteredTestimonials.slice(0, 3);
-
-  const safeIndex = currentIndex % (filteredTestimonials.length || 1);
-  const current = filteredTestimonials[safeIndex] || filteredTestimonials[0] || testimonialsList[0];
-
-  const handlePrev = () => {
-    setCurrentIndex((idx) => (idx === 0 ? filteredTestimonials.length - 1 : idx - 1));
-  };
-
-  const handleNext = () => {
-    setCurrentIndex((idx) => (idx === filteredTestimonials.length - 1 ? 0 : idx + 1));
-  };
-
   const handleAddReview = (newReview: Testimonial) => {
     setTestimonialsList((prev) => [newReview, ...prev]);
     setActiveCategory("ALL");
-    setCurrentIndex(0);
+  };
+
+  const handleCardClick = (item: Testimonial) => {
+    setIsPaused(true);
+    setSelectedReview(item);
   };
 
   return (
@@ -82,7 +72,7 @@ export default function TestimonialsSection() {
           </div>
         </div>
 
-        {/* Category Filter Pills & Mode Switcher */}
+        {/* Category Filter Pills & Scroll Controls */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 pb-4 border-b border-white/5">
           {/* Category Tabs */}
           <div className="flex flex-wrap items-center gap-2">
@@ -91,7 +81,6 @@ export default function TestimonialsSection() {
                 key={cat}
                 onClick={() => {
                   setActiveCategory(cat);
-                  setCurrentIndex(0);
                 }}
                 className={`px-4 py-2 rounded-xl font-mono text-xs font-semibold transition-all ${
                   activeCategory === cat
@@ -104,331 +93,205 @@ export default function TestimonialsSection() {
             ))}
           </div>
 
-          {/* View Mode Switcher: Top 3 Grid vs Floating Marquee vs Spotlight */}
-          <div className="flex items-center gap-1 bg-white/[0.03] p-1 rounded-xl border border-white/10">
-            <button
-              onClick={() => setViewMode("grid")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-colors ${
-                viewMode === "grid" ? "bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 font-bold" : "text-slate-400 hover:text-white"
-              }`}
-            >
-              <Grid className="w-3.5 h-3.5" /> Clean Grid (3)
-            </button>
-            <button
-              onClick={() => setViewMode("marquee")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-colors ${
-                viewMode === "marquee" ? "bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 font-bold" : "text-slate-400 hover:text-white"
-              }`}
-            >
-              <Play className="w-3.5 h-3.5" /> Floating (R to L)
-            </button>
-            <button
-              onClick={() => setViewMode("carousel")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-colors ${
-                viewMode === "carousel" ? "bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 font-bold" : "text-slate-400 hover:text-white"
-              }`}
-            >
-              <Layers className="w-3.5 h-3.5" /> Spotlight
-            </button>
-          </div>
+          {/* Pause / Play Motion Button */}
+          <button
+            onClick={() => setIsPaused(!isPaused)}
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.07] border border-white/10 text-xs font-mono text-slate-300 transition-colors"
+          >
+            {isPaused ? (
+              <>
+                <Play className="w-3.5 h-3.5 text-emerald-400 fill-emerald-400" />
+                <span>Resume Scrolling</span>
+              </>
+            ) : (
+              <>
+                <Pause className="w-3.5 h-3.5 text-amber-400" />
+                <span>Pause Motion</span>
+              </>
+            )}
+          </button>
         </div>
 
-        {/* Clean 3-Card Grid View Mode */}
-        {viewMode === "grid" && (
-          <div className="space-y-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {displayedGridItems.map((item) => (
-                <motion.div
-                  key={item.id}
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="glass-panel p-6 rounded-3xl border border-white/10 flex flex-col justify-between hover:border-cyan-400/40 transition-all bg-[#0F111A] shadow-xl group hover:-translate-y-1"
-                >
-                  <div className="space-y-4">
-                    {/* Top Company Badge & Rating */}
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-2">
-                        {item.companyLogo ? (
-                          <div className="w-6 h-6 rounded bg-white p-0.5 flex items-center justify-center shrink-0 border border-white/20">
-                            <img src={item.companyLogo} alt={item.companyName} className="w-full h-full object-contain" />
-                          </div>
-                        ) : null}
-                        <span className="px-2.5 py-1 rounded-lg bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 font-mono text-xs font-bold truncate max-w-[140px]">
-                          {item.companyName.toUpperCase()}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-0.5 shrink-0">
-                        {Array.from({ length: item.rating }).map((_, i) => (
-                          <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                        ))}
-                      </div>
-                    </div>
+        {/* Ultra-Slow Smooth Right-to-Left Floating Marquee */}
+        <div 
+          className="relative w-full overflow-hidden py-4"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => {
+            if (!selectedReview) setIsPaused(false);
+          }}
+        >
+          {/* Edge Gradient Mask */}
+          <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-[#08090E] to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-[#08090E] to-transparent z-10 pointer-events-none" />
 
-                    <Quote className="w-6 h-6 text-cyan-400/20" />
-
-                    {/* Quote */}
-                    <p className="text-xs sm:text-sm font-display text-slate-200 italic leading-relaxed line-clamp-4">
-                      "{item.quote}"
-                    </p>
-                  </div>
-
-                  {/* Bottom Client Info */}
-                  <div className="pt-4 border-t border-white/10 mt-6 flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-3">
-                      {item.avatar && (item.avatar.includes("-client.") || item.avatar.includes("gagandeep")) ? (
-                        <img
-                          src={item.avatar}
-                          alt={item.clientName}
-                          className="w-9 h-9 rounded-full object-cover border border-cyan-400/40"
-                        />
-                      ) : item.companyLogo || (item.avatar && item.avatar.includes("logo")) ? (
-                        <div className="w-9 h-9 rounded-xl bg-white p-1 flex items-center justify-center shrink-0 border border-white/20 overflow-hidden">
-                          <img
-                            src={item.companyLogo || item.avatar}
-                            alt={item.companyName}
-                            className="w-full h-full object-contain"
-                          />
-                        </div>
-                      ) : (
-                        <div className="w-9 h-9 rounded-xl bg-cyan-500/20 text-cyan-300 font-mono font-bold text-xs flex items-center justify-center border border-cyan-400/40 shrink-0">
-                          {item.companyName.charAt(0)}
-                        </div>
-                      )}
-                      <div className="truncate">
-                        <h4 className="font-bold text-xs text-white truncate">{item.clientName}</h4>
-                        <p className="text-[10px] font-mono text-slate-400 truncate">{item.clientTitle}</p>
-                      </div>
-                    </div>
-
-                    <span className="text-[10px] font-mono px-2 py-1 rounded bg-white/5 border border-white/10 text-cyan-300 font-bold shrink-0">
-                      {item.metricsResult}
-                    </span>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Clean Toggle Expander Button */}
-            <div className="flex justify-center">
-              <button
-                onClick={() => setShowAllInGrid(!showAllInGrid)}
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-slate-300 hover:text-white font-mono text-xs font-bold transition-all shadow-md"
+          <motion.div
+            className="flex gap-6 w-max"
+            animate={{ x: isPaused ? undefined : ["0%", "-50%"] }}
+            transition={{
+              ease: "linear",
+              duration: 85, // Ultra-slow smooth glide
+              repeat: Infinity,
+            }}
+          >
+            {[...filteredTestimonials, ...filteredTestimonials].map((item, idx) => (
+              <div
+                key={`${item.id}-${idx}`}
+                onClick={() => handleCardClick(item)}
+                className="w-[340px] sm:w-[380px] shrink-0 glass-panel p-6 rounded-3xl border border-white/10 flex flex-col justify-between bg-[#0F111A] shadow-xl hover:border-cyan-400/50 transition-all hover:scale-[1.02] cursor-pointer group"
               >
-                {showAllInGrid ? (
-                  <>
-                    <span>Show Top 3 Only</span>
-                    <ChevronUp className="w-4 h-4 text-cyan-400" />
-                  </>
-                ) : (
-                  <>
-                    <span>Show All Reviews ({filteredTestimonials.length})</span>
-                    <ChevronDown className="w-4 h-4 text-cyan-400" />
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Floating Right-To-Left Marquee Mode */}
-        {viewMode === "marquee" && (
-          <div className="relative w-full overflow-hidden py-4">
-            {/* Gradient Fades on Left & Right */}
-            <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-[#08090E] to-transparent z-10 pointer-events-none" />
-            <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-[#08090E] to-transparent z-10 pointer-events-none" />
-
-            <motion.div
-              className="flex gap-6 w-max"
-              animate={{ x: ["0%", "-50%"] }}
-              transition={{
-                ease: "linear",
-                duration: 35,
-                repeat: Infinity,
-              }}
-              whileHover={{ animationPlayState: "paused" }}
-            >
-              {[...filteredTestimonials, ...filteredTestimonials].map((item, idx) => (
-                <div
-                  key={`${item.id}-${idx}`}
-                  className="w-[360px] sm:w-[400px] shrink-0 glass-panel p-6 rounded-3xl border border-white/10 flex flex-col justify-between bg-[#0F111A] shadow-xl hover:border-cyan-400/40 transition-all hover:scale-[1.02]"
-                >
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        {item.companyLogo ? (
-                          <div className="w-6 h-6 rounded bg-white p-0.5 flex items-center justify-center shrink-0 border border-white/20">
-                            <img src={item.companyLogo} alt={item.companyName} className="w-full h-full object-contain" />
-                          </div>
-                        ) : null}
-                        <span className="px-2.5 py-1 rounded-lg bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 font-mono text-xs font-bold truncate max-w-[140px]">
-                          {item.companyName.toUpperCase()}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-0.5">
-                        {Array.from({ length: item.rating }).map((_, i) => (
-                          <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                        ))}
-                      </div>
-                    </div>
-
-                    <p className="text-xs font-display text-slate-200 italic leading-relaxed line-clamp-4">
-                      "{item.quote}"
-                    </p>
-                  </div>
-
-                  <div className="pt-4 border-t border-white/10 mt-6 flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-3">
-                      {item.avatar && (item.avatar.includes("-client.") || item.avatar.includes("gagandeep")) ? (
-                        <img
-                          src={item.avatar}
-                          alt={item.clientName}
-                          className="w-9 h-9 rounded-full object-cover border border-cyan-400/40"
-                        />
-                      ) : item.companyLogo || (item.avatar && item.avatar.includes("logo")) ? (
-                        <div className="w-9 h-9 rounded-xl bg-white p-1 flex items-center justify-center shrink-0 border border-white/20 overflow-hidden">
-                          <img
-                            src={item.companyLogo || item.avatar}
-                            alt={item.companyName}
-                            className="w-full h-full object-contain"
-                          />
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      {item.companyLogo ? (
+                        <div className="w-6 h-6 rounded bg-white p-0.5 flex items-center justify-center shrink-0 border border-white/20">
+                          <img src={item.companyLogo} alt={item.companyName} className="w-full h-full object-contain" />
                         </div>
-                      ) : (
-                        <div className="w-9 h-9 rounded-xl bg-cyan-500/20 text-cyan-300 font-mono font-bold text-xs flex items-center justify-center border border-cyan-400/40 shrink-0">
-                          {item.companyName.charAt(0)}
-                        </div>
-                      )}
-                      <div className="truncate">
-                        <h4 className="font-bold text-xs text-white truncate">{item.clientName}</h4>
-                        <p className="text-[10px] font-mono text-slate-400 truncate">{item.clientTitle}</p>
-                      </div>
-                    </div>
-
-                    <span className="text-[10px] font-mono px-2 py-1 rounded bg-white/5 border border-white/10 text-cyan-300 font-bold shrink-0">
-                      {item.metricsResult}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </motion.div>
-          </div>
-        )}
-
-        {/* Carousel / Spotlight View Mode */}
-        {viewMode === "carousel" && (
-          <div className="max-w-4xl mx-auto relative">
-            <AnimatePresence mode="wait">
-              {current && (
-                <motion.div
-                  key={current.id}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.3 }}
-                  className="glass-panel p-8 sm:p-12 rounded-3xl border border-cyan-500/20 relative shadow-2xl space-y-6 bg-[#0F111A]"
-                >
-                  {/* Top Bar: Company Logo & Rating */}
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      {current.companyLogo ? (
-                        <div className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-xl bg-white/10 border border-white/20">
-                          <div className="w-7 h-7 rounded-lg bg-white p-1 flex items-center justify-center shrink-0">
-                            <img src={current.companyLogo} alt={current.companyName} className="w-full h-full object-contain" />
-                          </div>
-                          <span className="text-cyan-300 font-mono text-sm font-bold tracking-wider">
-                            {current.companyName.toUpperCase()}
-                          </span>
-                        </div>
-                      ) : (
-                        <div className="px-4 py-1.5 rounded-xl bg-cyan-500/10 border border-cyan-400/30 text-cyan-400 font-mono text-sm font-bold tracking-widest">
-                          {current.companyName.toUpperCase()}
-                        </div>
-                      )}
-                      <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-slate-400 text-xs font-mono">
-                        {current.category}
+                      ) : null}
+                      <span className="px-2.5 py-1 rounded-lg bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 font-mono text-xs font-bold truncate max-w-[140px]">
+                        {item.companyName.toUpperCase()}
                       </span>
                     </div>
-
-                    <div className="flex items-center gap-1">
-                      {Array.from({ length: current.rating }).map((_, i) => (
-                        <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                    <div className="flex items-center gap-0.5">
+                      {Array.from({ length: item.rating }).map((_, i) => (
+                        <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                       ))}
                     </div>
                   </div>
 
-                  <Quote className="w-10 h-10 text-cyan-400/25" />
-
-                  {/* Quote */}
-                  <p className="text-lg sm:text-xl font-display font-medium text-slate-100 leading-relaxed italic">
-                    "{current.quote}"
+                  <p className="text-xs font-display text-slate-200 italic leading-relaxed line-clamp-4 group-hover:text-white transition-colors">
+                    "{item.quote}"
                   </p>
+                </div>
 
-                  {/* Bottom Info: Client Avatar & Outcome Pill */}
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-6 border-t border-white/10">
-                    <div className="flex items-center gap-4">
-                      {current.avatar && (current.avatar.includes("-client.") || current.avatar.includes("gagandeep")) ? (
+                <div className="pt-4 border-t border-white/10 mt-6 flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-3">
+                    {item.avatar && (item.avatar.includes("-client.") || item.avatar.includes("gagandeep")) ? (
+                      <img
+                        src={item.avatar}
+                        alt={item.clientName}
+                        className="w-9 h-9 rounded-full object-cover border border-cyan-400/40"
+                      />
+                    ) : item.companyLogo || (item.avatar && item.avatar.includes("logo")) ? (
+                      <div className="w-9 h-9 rounded-xl bg-white p-1 flex items-center justify-center shrink-0 border border-white/20 overflow-hidden">
                         <img
-                          src={current.avatar}
-                          alt={current.clientName}
-                          className="w-12 h-12 rounded-full object-cover border-2 border-cyan-400/40 shadow-md"
+                          src={item.companyLogo || item.avatar}
+                          alt={item.companyName}
+                          className="w-full h-full object-contain"
                         />
-                      ) : current.companyLogo || (current.avatar && current.avatar.includes("logo")) ? (
-                        <div className="w-12 h-12 rounded-2xl bg-white p-1.5 flex items-center justify-center shrink-0 border border-white/20 shadow-md overflow-hidden">
-                          <img
-                            src={current.companyLogo || current.avatar}
-                            alt={current.companyName}
-                            className="w-full h-full object-contain"
-                          />
-                        </div>
-                      ) : (
-                        <div className="w-12 h-12 rounded-2xl bg-cyan-500/20 text-cyan-300 font-mono font-bold text-lg flex items-center justify-center border border-cyan-400/40 shrink-0">
-                          {current.companyName.charAt(0)}
-                        </div>
-                      )}
-                      <div>
-                        <h4 className="font-display font-bold text-base text-white flex items-center gap-2">
-                          {current.clientName}
-                          {current.verified && (
-                            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-400/30">
-                              ✓ Verified Client
-                            </span>
-                          )}
-                        </h4>
-                        <p className="text-xs font-mono text-slate-400">
-                          {current.clientTitle} •{" "}
-                          <span className="text-cyan-400 font-bold">{current.companyName}</span>
-                        </p>
                       </div>
-                    </div>
-
-                    <div className="px-4 py-2 rounded-xl bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 text-xs font-mono font-bold flex items-center gap-2">
-                      <Sparkles className="w-3.5 h-3.5 text-cyan-400" /> DELIVERED: {current.metricsResult}
+                    ) : (
+                      <div className="w-9 h-9 rounded-xl bg-cyan-500/20 text-cyan-300 font-mono font-bold text-xs flex items-center justify-center border border-cyan-400/40 shrink-0">
+                        {item.companyName.charAt(0)}
+                      </div>
+                    )}
+                    <div className="truncate">
+                      <h4 className="font-bold text-xs text-white truncate">{item.clientName}</h4>
+                      <p className="text-[10px] font-mono text-slate-400 truncate">{item.clientTitle}</p>
                     </div>
                   </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
 
-            {/* Carousel Controls */}
-            <div className="flex items-center justify-center gap-4 mt-8">
+                  <span className="text-[10px] font-mono px-2 py-1 rounded bg-white/5 border border-white/10 text-cyan-300 font-bold shrink-0">
+                    {item.metricsResult}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Selected Review Detail Modal */}
+      <AnimatePresence>
+        {selectedReview && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/80 backdrop-blur-md">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              className="glass-panel p-8 sm:p-10 rounded-3xl border border-cyan-400/40 max-w-2xl w-full relative shadow-2xl bg-[#0F111A] space-y-6"
+            >
               <button
-                onClick={handlePrev}
-                className="p-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white transition-colors"
+                onClick={() => {
+                  setSelectedReview(null);
+                  setIsPaused(false);
+                }}
+                className="absolute top-6 right-6 p-2 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white transition-colors"
               >
-                <ChevronLeft className="w-5 h-5" />
+                <X className="w-5 h-5" />
               </button>
-              <span className="text-xs font-mono text-slate-400">
-                0{safeIndex + 1} / {filteredTestimonials.length < 10 ? `0${filteredTestimonials.length}` : filteredTestimonials.length}
-              </span>
-              <button
-                onClick={handleNext}
-                className="p-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white transition-colors"
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
-            </div>
+
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  {selectedReview.companyLogo ? (
+                    <div className="w-10 h-10 rounded-xl bg-white p-1 flex items-center justify-center border border-white/20 shadow-sm">
+                      <img src={selectedReview.companyLogo} alt={selectedReview.companyName} className="w-full h-full object-contain" />
+                    </div>
+                  ) : null}
+                  <div>
+                    <h3 className="font-display font-bold text-lg text-white">
+                      {selectedReview.companyName}
+                    </h3>
+                    <span className="text-xs font-mono text-cyan-400">{selectedReview.category}</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: selectedReview.rating }).map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                  ))}
+                </div>
+              </div>
+
+              <Quote className="w-8 h-8 text-cyan-400/30" />
+
+              <p className="text-base sm:text-lg font-display text-slate-100 italic leading-relaxed">
+                "{selectedReview.quote}"
+              </p>
+
+              <div className="pt-6 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  {selectedReview.avatar && (selectedReview.avatar.includes("-client.") || selectedReview.avatar.includes("gagandeep")) ? (
+                    <img
+                      src={selectedReview.avatar}
+                      alt={selectedReview.clientName}
+                      className="w-12 h-12 rounded-full object-cover border-2 border-cyan-400/40 shadow-md"
+                    />
+                  ) : selectedReview.companyLogo || (selectedReview.avatar && selectedReview.avatar.includes("logo")) ? (
+                    <div className="w-12 h-12 rounded-2xl bg-white p-1.5 flex items-center justify-center shrink-0 border border-white/20 shadow-md overflow-hidden">
+                      <img
+                        src={selectedReview.companyLogo || selectedReview.avatar}
+                        alt={selectedReview.companyName}
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-12 h-12 rounded-2xl bg-cyan-500/20 text-cyan-300 font-mono font-bold text-lg flex items-center justify-center border border-cyan-400/40 shrink-0">
+                      {selectedReview.companyName.charAt(0)}
+                    </div>
+                  )}
+                  <div>
+                    <h4 className="font-display font-bold text-sm text-white flex items-center gap-2">
+                      {selectedReview.clientName}
+                      {selectedReview.verified && (
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-400/30">
+                          ✓ Verified Client
+                        </span>
+                      )}
+                    </h4>
+                    <p className="text-xs font-mono text-slate-400">
+                      {selectedReview.clientTitle} • <span className="text-cyan-400 font-bold">{selectedReview.companyName}</span>
+                    </p>
+                  </div>
+                </div>
+
+                <div className="px-4 py-2 rounded-xl bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 text-xs font-mono font-bold flex items-center gap-2">
+                  <Sparkles className="w-3.5 h-3.5 text-cyan-400" /> DELIVERED: {selectedReview.metricsResult}
+                </div>
+              </div>
+            </motion.div>
           </div>
         )}
-      </div>
+      </AnimatePresence>
 
       {/* Submit Review Modal */}
       <SubmitReviewModal
