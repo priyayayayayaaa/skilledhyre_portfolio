@@ -15,6 +15,7 @@ import AboutSection from "@/components/AboutSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import FinalCTASection from "@/components/FinalCTASection";
 import ProjectStarterModal from "@/components/ProjectStarterModal";
+import FloatingActionBar from "@/components/FloatingActionBar";
 import Footer from "@/components/Footer";
 
 export default function Home() {
@@ -43,7 +44,7 @@ export default function Home() {
       <CapabilitiesSection onOpenProjectModal={handleOpenProjectModal} />
 
       {/* Section 04: The Work (Cinematic Case Studies) */}
-      <WorkShowcase />
+      <WorkShowcase onOpenProjectModal={handleOpenProjectModal} />
 
       {/* Section 05: Technology Constellation */}
       <TechnologyConstellation />
@@ -71,6 +72,9 @@ export default function Home() {
 
       {/* Footer */}
       <Footer />
+
+      {/* Floating Action Bar (Bottom Right) */}
+      <FloatingActionBar onOpenProjectModal={handleOpenProjectModal} />
 
       {/* Project Discovery Wizard Modal */}
       <ProjectStarterModal

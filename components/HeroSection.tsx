@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, ArrowDown, Sparkles } from "lucide-react";
+import { ArrowRight, ArrowDown, Sparkles, Activity, ShieldCheck, Zap } from "lucide-react";
 import InteractiveHeroEcosystem from "./InteractiveHeroEcosystem";
 
 interface HeroSectionProps {
@@ -22,15 +22,32 @@ export default function HeroSection({ onOpenProjectModal }: HeroSectionProps) {
   };
 
   return (
-    <section id="hero" className="relative pt-32 pb-20 lg:pt-40 lg:pb-32 overflow-hidden bg-[#08090E] min-h-screen flex items-center">
+    <section id="hero" className="relative pt-32 pb-20 lg:pt-36 lg:pb-28 overflow-hidden bg-[#08090E] min-h-screen flex items-center">
       {/* Background Glow Orbs */}
-      <div className="glow-orb-cyan -top-20 left-1/4 -translate-x-1/2" />
-      <div className="glow-orb-violet top-40 right-10" />
+      <div className="glow-orb-cyan -top-20 left-1/4 -translate-x-1/2 pointer-events-none" />
+      <div className="glow-orb-violet top-40 right-10 pointer-events-none" />
 
       {/* Fine Grid Pattern Overlay */}
       <div className="absolute inset-0 grid-pattern radial-mask opacity-40 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+        {/* Live System Operational Status Bar */}
+        <div className="mb-8 flex items-center justify-start">
+          <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/[0.03] border border-cyan-400/30 backdrop-blur-md shadow-[0_0_20px_rgba(0,242,254,0.15)]">
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400"></span>
+            </span>
+            <span className="text-xs font-mono font-bold text-slate-200">
+              LIVE SYSTEM OPERATIONAL
+            </span>
+            <span className="text-slate-600 font-mono">•</span>
+            <span className="text-xs font-mono text-cyan-400 hidden sm:inline">
+              120+ AI & Engineering Deployments
+            </span>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           
           {/* Left Text Column */}
@@ -42,7 +59,7 @@ export default function HeroSection({ onOpenProjectModal }: HeroSectionProps) {
               <span>SKILLEDHYRE LABS</span>
             </div>
 
-            {/* Main Headline - Bold & 100% Visible */}
+            {/* Main Headline */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-black text-white tracking-tight leading-[1.1] mb-6">
               WE BUILD WHAT{" "}
               <span className="text-gradient-cyan">MOVES BUSINESS</span> FORWARD.
@@ -66,7 +83,7 @@ export default function HeroSection({ onOpenProjectModal }: HeroSectionProps) {
             </p>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto mb-8">
               <button
                 onClick={onOpenProjectModal}
                 className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-cyan-400 via-blue-500 to-violet-600 text-white font-semibold text-sm tracking-wider uppercase shadow-[0_0_35px_rgba(0,242,254,0.4)] hover:shadow-[0_0_50px_rgba(0,242,254,0.7)] transition-all duration-300 hover:scale-[1.03]"
@@ -83,6 +100,23 @@ export default function HeroSection({ onOpenProjectModal }: HeroSectionProps) {
                 <ArrowDown className="w-4 h-4 text-cyan-400 group-hover:translate-y-0.5 transition-transform" />
               </button>
             </div>
+
+            {/* Quick Metrics Badges */}
+            <div className="grid grid-cols-3 gap-4 pt-6 border-t border-white/10 w-full max-w-lg">
+              <div>
+                <span className="text-xl sm:text-2xl font-display font-black text-cyan-400 block">120+</span>
+                <span className="text-[10px] font-mono text-slate-400">Shipped Projects</span>
+              </div>
+              <div>
+                <span className="text-xl sm:text-2xl font-display font-black text-cyan-400 block">99.99%</span>
+                <span className="text-[10px] font-mono text-slate-400">System Uptime</span>
+              </div>
+              <div>
+                <span className="text-xl sm:text-2xl font-display font-black text-cyan-400 block">4.9★</span>
+                <span className="text-[10px] font-mono text-slate-400">Client Rating</span>
+              </div>
+            </div>
+
           </div>
 
           {/* Right Visual Ecosystem Canvas Column */}

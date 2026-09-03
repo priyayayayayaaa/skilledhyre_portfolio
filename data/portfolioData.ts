@@ -707,6 +707,13 @@ export interface ClientLogoItem {
 
 export const CLIENT_LOGOS: ClientLogoItem[] = [
   {
+    name: "Ankur Incorporation",
+    label: "ANKUR INCORPORATION",
+    logoUrl: "/images/ankur-incorporation-logo.png",
+    industry: "Business Growth & Consulting",
+    testimonialId: "test-ankur-incorporation",
+  },
+  {
     name: "Vastu Infinity",
     label: "VASTU INFINITY",
     logoUrl: "/images/vastu-infinity-logo.png",
@@ -760,6 +767,21 @@ export const CLIENT_LOGOS: ClientLogoItem[] = [
 ];
 
 export const TESTIMONIALS: Testimonial[] = [
+  {
+    id: "test-ankur-incorporation",
+    quote: "SkilledHyre has been handling our Social Media Marketing and SEO with a very professional and result-oriented approach. The team understands the brand requirements well, creates engaging content, and consistently works on improving our online visibility and reach. Their SEO efforts have helped strengthen our digital presence, while their SMM strategy has made our social media communication more consistent and engaging. The team is responsive, creative, and open to feedback. Overall, a great team to work with for SMM, SEO, and digital marketing services. Highly recommended!",
+    clientName: "Ankur Incorporation",
+    clientTitle: "Founder & Director",
+    companyName: "Ankur Incorporation",
+    companyLogo: "/images/ankur-incorporation-logo.png",
+    companyLogoText: "ANKUR INCORPORATION",
+    metricsResult: "SMM • SEO • Digital Marketing",
+    rating: 5,
+    avatar: "/images/ankur-incorporation-client.png",
+    category: "Digital Marketing",
+    verified: true,
+    date: "Sep 2026",
+  },
   {
     id: "test-vastu-infinity",
     quote: "We had a great experience working with SkilledHyre for our Social Media Marketing and Digital Marketing requirements. Their team understood our brand well and helped us strengthen our online presence through creative content, consistent social media management, and effective digital marketing strategies. The team is professional, responsive, and dedicated to delivering quality results. We truly appreciate their efforts and support in helping Vastu Infinity grow digitally. We highly recommend SkilledHyre to businesses looking for reliable and result-oriented digital marketing and SMM services.",
