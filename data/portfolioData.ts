@@ -707,6 +707,13 @@ export interface ClientLogoItem {
 
 export const CLIENT_LOGOS: ClientLogoItem[] = [
   {
+    name: "Designer Karigar",
+    label: "DESIGNER KARIGAR",
+    logoUrl: "/images/designer-karigar-logo.png",
+    industry: "Fashion & Creative Design",
+    testimonialId: "test-designer-karigar",
+  },
+  {
     name: "Ankur Incorporation",
     label: "ANKUR INCORPORATION",
     logoUrl: "/images/ankur-incorporation-logo.png",
@@ -767,6 +774,21 @@ export const CLIENT_LOGOS: ClientLogoItem[] = [
 ];
 
 export const TESTIMONIALS: Testimonial[] = [
+  {
+    id: "test-designer-karigar",
+    quote: "We had a great experience working with SkilledHyre for our SMM and SEO. The team has been very professional, creative, and consistent with their work. Our social media presence has become much more engaging, and the SEO efforts have helped improve our online visibility. The team understands our requirements well, is responsive to feedback, and keeps the work organized. Overall, we are happy with the services and would recommend SkilledHyre to businesses looking for reliable SMM and SEO support.",
+    clientName: "Designer Karigar Team",
+    clientTitle: "Founder & Creative Director",
+    companyName: "Designer Karigar",
+    companyLogo: "/images/designer-karigar-logo.png",
+    companyLogoText: "DESIGNER KARIGAR",
+    metricsResult: "SMM • SEO • Brand Reach",
+    rating: 5,
+    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=300&auto=format&fit=crop",
+    category: "Digital Marketing",
+    verified: true,
+    date: "Sep 2026",
+  },
   {
     id: "test-ankur-incorporation",
     quote: "SkilledHyre has been handling our Social Media Marketing and SEO with a very professional and result-oriented approach. The team understands the brand requirements well, creates engaging content, and consistently works on improving our online visibility and reach. Their SEO efforts have helped strengthen our digital presence, while their SMM strategy has made our social media communication more consistent and engaging. The team is responsive, creative, and open to feedback. Overall, a great team to work with for SMM, SEO, and digital marketing services. Highly recommended!",
