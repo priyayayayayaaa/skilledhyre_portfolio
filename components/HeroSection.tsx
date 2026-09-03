@@ -51,7 +51,7 @@ export default function HeroSection({ onOpenProjectModal }: HeroSectionProps) {
             </span>
             <span className="text-slate-600 font-mono">•</span>
             <span className="text-xs font-mono text-cyan-400 group-hover:underline flex items-center gap-1">
-              18+ Verified Client Reviews ⭐
+              27+ Verified Client Reviews ⭐
             </span>
           </button>
         </div>
@@ -121,7 +121,7 @@ export default function HeroSection({ onOpenProjectModal }: HeroSectionProps) {
               </div>
               <button onClick={scrollToTestimonials} className="text-left group cursor-pointer">
                 <span className="text-xl sm:text-2xl font-display font-black text-amber-400 block group-hover:scale-105 transition-transform">5.0★</span>
-                <span className="text-[10px] font-mono text-cyan-400 group-hover:underline">18+ Reviews →</span>
+                <span className="text-[10px] font-mono text-cyan-400 group-hover:underline">27+ Reviews →</span>
               </button>
             </div>
 

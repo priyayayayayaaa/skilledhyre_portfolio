@@ -59,7 +59,7 @@ export default function TestimonialsSection() {
               </div>
               <div className="text-left">
                 <span className="block text-xs font-mono font-bold text-white">5.0 / 5.0 Rating</span>
-                <span className="block text-[10px] font-mono text-slate-400">18+ Verified Client Reviews</span>
+                <span className="block text-[10px] font-mono text-slate-400">27+ Verified Client Reviews</span>
               </div>
             </div>
 
