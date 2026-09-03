@@ -104,19 +104,16 @@ export default function TechnologyConstellation() {
       {/* Background Radial Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-cyan-500/5 rounded-full blur-[150px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full space-y-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full space-y-6">
         
         {/* Top Header Block */}
         <div className="text-center max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/20 text-cyan-400 text-xs font-mono tracking-widest uppercase mb-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/20 text-cyan-400 text-xs font-mono tracking-widest uppercase mb-2">
             <Layers className="w-3.5 h-3.5 text-cyan-400" /> TECHNOLOGY CONSTELLATION
           </div>
           <h2 className="text-3xl sm:text-5xl font-display font-black text-white tracking-tight leading-tight">
             THE TECH BEHIND <span className="text-gradient-cyan">THE WORK</span>.
           </h2>
-          <p className="text-slate-400 text-xs sm:text-sm font-mono mt-3 max-w-lg mx-auto">
-            Interactive multi-disciplinary stack architecture spanning AI, Engineering, Data, Cloud & Marketing.
-          </p>
         </div>
 
         {/* Clean Top Category Navigation Bar */}
