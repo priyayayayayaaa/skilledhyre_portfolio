@@ -707,6 +707,13 @@ export interface ClientLogoItem {
 
 export const CLIENT_LOGOS: ClientLogoItem[] = [
   {
+    name: "ED Event Destination",
+    label: "EVENT DESTINATION",
+    logoUrl: "/images/event-destination-logo.png",
+    industry: "Events & Destination Management",
+    testimonialId: "test-event-destination",
+  },
+  {
     name: "Designer Karigar",
     label: "DESIGNER KARIGAR",
     logoUrl: "/images/designer-karigar-logo.png",
@@ -774,6 +781,21 @@ export const CLIENT_LOGOS: ClientLogoItem[] = [
 ];
 
 export const TESTIMONIALS: Testimonial[] = [
+  {
+    id: "test-event-destination",
+    quote: "Great experience working with SkilledHyre for our SMM and SEO. Their team understands the event industry well and has helped us build a more professional and engaging online presence. We appreciate their creativity, consistency, and quick response to feedback. Highly recommended!",
+    clientName: "ED Event Destination",
+    clientTitle: "Managing Director",
+    companyName: "ED Event Destination",
+    companyLogo: "/images/event-destination-logo.png",
+    companyLogoText: "EVENT DESTINATION",
+    metricsResult: "SMM • SEO • Event Marketing",
+    rating: 5,
+    avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=300&auto=format&fit=crop",
+    category: "Digital Marketing",
+    verified: true,
+    date: "Sep 2026",
+  },
   {
     id: "test-designer-karigar",
     quote: "We had a great experience working with SkilledHyre for our SMM and SEO. The team has been very professional, creative, and consistent with their work. Our social media presence has become much more engaging, and the SEO efforts have helped improve our online visibility. The team understands our requirements well, is responsive to feedback, and keeps the work organized. Overall, we are happy with the services and would recommend SkilledHyre to businesses looking for reliable SMM and SEO support.",
