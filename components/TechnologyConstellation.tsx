@@ -1,40 +1,31 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { TECHNOLOGIES, TECH_CATEGORIES } from "@/data/portfolioData";
-import { Layers } from "lucide-react";
+import { Sparkles, Layers, Cpu, Code2, Database, Server, BarChart3 } from "lucide-react";
 
-// Micro-contextual descriptions for subtle hover illumination
-const TECH_SUBTEXT: Record<string, string> = {
-  "Generative AI": "LLMs • Agentic Workflows • Neural Synthesis",
-  "Machine Learning": "Predictive Models • Custom Pipelines",
-  "LLM & RAG Pipelines": "Vector Databases • Enterprise Context",
-  "Predictive Analytics": "Telemetry Scoring • Forecasting",
-  "C#": "Enterprise Backends • High Performance",
-  ".NET Core": "Microservices • Cloud Native APIs",
-  "ASP.NET Core": "Restful Gateways • Scalable Services",
-  "React & Next.js": "High-Velocity Frontend • SSR & Hydration",
-  TypeScript: "Type-Safe Systems • Enterprise Architecture",
-  Python: "AI Services • Data Pipelines & Automation",
-  "SQL & PostgreSQL": "ACID Compliance • Relational Data Engines",
-  "Azure & AWS Cloud": "Serverless Infrastructure • DevOps Pipelines",
-  "Analytics Telemetry": "Real-time Auditing • Event Streaming",
-  "Custom ERP Engines": "Automated Workflows • Business Ops",
-  "CRM Automation": "Lead Funnel Telemetry • System Integration",
-  "API Gateways": "Zero-Trust Mesh • High Concurrency",
-  "Technical SEO": "AEO & GEO Optimization • Organic Scale",
-  "Performance Marketing": "Conversion Engineering • Paid Acquisition",
-  "Funnel Conversion": "UX Telemetry • Lead Optimization",
+const CATEGORY_ICONS: Record<string, React.ElementType> = {
+  AI: Cpu,
+  DEVELOPMENT: Code2,
+  "DATA & CLOUD": Database,
+  "BUSINESS SYSTEMS": Server,
+  MARKETING: BarChart3,
+};
+
+const CATEGORY_MAP: Record<string, string[]> = {
+  AI: ["Generative AI", "Machine Learning", "LLM & RAG Pipelines", "Predictive Analytics"],
+  DEVELOPMENT: ["C#", ".NET Core", "ASP.NET Core", "React & Next.js", "TypeScript", "Python"],
+  "DATA & CLOUD": ["SQL & PostgreSQL", "Azure & AWS Cloud", "Analytics Telemetry"],
+  "BUSINESS SYSTEMS": ["Custom ERP Engines", "CRM Automation", "API Gateways"],
+  MARKETING: ["Technical SEO", "Performance Marketing", "Funnel Conversion"],
 };
 
 export default function TechnologyConstellation() {
-  const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
-  const [hoveredTech, setHoveredTech] = useState<string | null>(null);
-
+  const [activeCategory, setActiveCategory] = useState<string>("AI");
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  // Signature Architecture Network Line Background Canvas Effect
+  // Canvas Constellation Particle Orbit Animation
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -42,8 +33,8 @@ export default function TechnologyConstellation() {
     if (!ctx) return;
 
     let animId: number;
-    let width = (canvas.width = canvas.parentElement?.clientWidth || window.innerWidth);
-    let height = (canvas.height = canvas.parentElement?.clientHeight || 600);
+    let width = (canvas.width = canvas.parentElement?.clientWidth || 800);
+    let height = (canvas.height = canvas.parentElement?.clientHeight || 450);
 
     const handleResize = () => {
       if (!canvas || !canvas.parentElement) return;
@@ -52,49 +43,46 @@ export default function TechnologyConstellation() {
     };
     window.addEventListener("resize", handleResize);
 
-    const nodes = Array.from({ length: 22 }).map(() => ({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      vx: (Math.random() - 0.5) * 0.3,
-      vy: (Math.random() - 0.5) * 0.3,
-      radius: Math.random() * 1.5 + 1,
+    const centerX = width / 2;
+    const centerY = height / 2;
+
+    let particles = Array.from({ length: 30 }).map(() => ({
+      angle: Math.random() * Math.PI * 2,
+      radius: 80 + Math.random() * 140,
+      speed: 0.002 + Math.random() * 0.003,
+      size: Math.random() * 1.8 + 1,
+      color: "#00F2FE",
     }));
 
     const render = () => {
       ctx.clearRect(0, 0, width, height);
 
-      // Update & Draw Nodes
-      nodes.forEach((node, i) => {
-        node.x += node.vx;
-        node.y += node.vy;
+      // Central ambient radial glow
+      const grad = ctx.createRadialGradient(centerX, centerY, 10, centerX, centerY, 220);
+      grad.addColorStop(0, "rgba(0, 242, 254, 0.08)");
+      grad.addColorStop(0.5, "rgba(59, 130, 246, 0.03)");
+      grad.addColorStop(1, "transparent");
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, width, height);
 
-        if (node.x < 0 || node.x > width) node.vx *= -1;
-        if (node.y < 0 || node.y > height) node.vy *= -1;
+      // Orbit particles & subtle line connections
+      particles.forEach((p) => {
+        p.angle += p.speed;
+        const px = centerX + Math.cos(p.angle) * p.radius;
+        const py = centerY + Math.sin(p.angle) * p.radius;
 
         ctx.beginPath();
-        ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
-        ctx.fillStyle = hoveredTech ? "rgba(0, 242, 254, 0.4)" : "rgba(255, 255, 255, 0.15)";
+        ctx.arc(px, py, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(0, 242, 254, 0.5)";
         ctx.fill();
 
-        // Connect nearby nodes with subtle lines
-        for (let j = i + 1; j < nodes.length; j++) {
-          const node2 = nodes[j];
-          const dx = node.x - node2.x;
-          const dy = node.y - node2.y;
-          const distSq = dx * dx + dy * dy;
-
-          if (distSq < 14000) {
-            const alpha = (1 - distSq / 14000) * (hoveredTech ? 0.12 : 0.05);
-            ctx.beginPath();
-            ctx.moveTo(node.x, node.y);
-            ctx.lineTo(node2.x, node2.y);
-            ctx.strokeStyle = hoveredTech ? "#00F2FE" : "rgba(255, 255, 255, 0.1)";
-            ctx.lineWidth = 0.5;
-            ctx.globalAlpha = alpha;
-            ctx.stroke();
-            ctx.globalAlpha = 1;
-          }
-        }
+        // Connect to center node
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.lineTo(px, py);
+        ctx.strokeStyle = "rgba(0, 242, 254, 0.06)";
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
       });
 
       animId = requestAnimationFrame(render);
@@ -106,171 +94,161 @@ export default function TechnologyConstellation() {
       cancelAnimationFrame(animId);
       window.removeEventListener("resize", handleResize);
     };
-  }, [hoveredTech]);
-
-  const categoriesToShow =
-    selectedCategory === "ALL"
-      ? (TECH_CATEGORIES as unknown as string[])
-      : [selectedCategory];
+  }, []);
 
   return (
     <section
       id="technology"
-      className="py-16 sm:py-24 bg-[#08090E] relative overflow-hidden border-t border-white/5"
+      className="py-20 sm:py-24 bg-[#08090E] relative overflow-hidden border-t border-white/5 min-h-[90vh] flex flex-col justify-between"
     >
-      {/* Background Interactive Architecture Canvas */}
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 pointer-events-none z-0 transition-opacity duration-700"
-      />
+      {/* Background Radial Glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-cyan-500/5 rounded-full blur-[150px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full flex-1 flex flex-col justify-between">
         
-        {/* Compact Editorial Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10 pb-6 border-b border-white/10">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/20 text-cyan-400 text-[11px] font-mono tracking-widest uppercase mb-2">
-              <Layers className="w-3 h-3 text-cyan-400" /> TECHNOLOGY CONSTELLATION
-            </div>
-            <h2 className="text-3xl sm:text-5xl font-display font-black text-white tracking-tight leading-none">
-              THE TECH BEHIND <span className="text-cyan-400">THE WORK</span>.
-            </h2>
+        {/* Header Block */}
+        <div className="text-center max-w-3xl mx-auto mb-8">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/20 text-cyan-400 text-xs font-mono tracking-widest uppercase mb-3">
+            <Layers className="w-3.5 h-3.5 text-cyan-400" /> TECHNOLOGY CONSTELLATION
           </div>
-
-          <p className="text-slate-400 text-xs sm:text-sm font-mono max-w-xs text-left sm:text-right shrink-0">
-            19+ Enterprise Stack Tools <br />
-            <span className="text-cyan-400">Production Ready Architecture</span>
+          <h2 className="text-3xl sm:text-5xl font-display font-black text-white tracking-tight leading-tight">
+            THE TECH BEHIND <span className="text-gradient-cyan">THE WORK</span>.
+          </h2>
+          <p className="text-slate-400 text-xs sm:text-sm font-mono mt-3 max-w-lg mx-auto">
+            Interactive multi-disciplinary stack architecture spanning AI, Engineering, Data, Cloud & Marketing.
           </p>
         </div>
 
-        {/* Compact Horizontal Category Navigation Bar */}
-        <div className="flex items-center gap-6 sm:gap-8 overflow-x-auto no-scrollbar mb-10 pb-2 border-b border-white/10">
-          <button
-            onClick={() => setSelectedCategory("ALL")}
-            className={`pb-2.5 text-xs font-mono tracking-widest uppercase transition-all relative shrink-0 ${
-              selectedCategory === "ALL"
-                ? "text-cyan-400 font-bold"
-                : "text-slate-400 hover:text-white"
-            }`}
+        {/* Central Interactive Constellation Canvas & Node Map */}
+        <div className="relative w-full max-w-5xl mx-auto min-h-[380px] sm:min-h-[440px] flex items-center justify-center my-4">
+          
+          {/* Background Canvas Layer */}
+          <canvas
+            ref={canvasRef}
+            className="absolute inset-0 pointer-events-none z-0 opacity-80"
+          />
+
+          {/* Central SkilledHyre Labs Core Node */}
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.8 }}
+            className="relative z-20 w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-[#0F111A] border-2 border-cyan-400/40 shadow-[0_0_50px_rgba(0,242,254,0.25)] flex flex-col items-center justify-center text-center p-2 cursor-pointer group hover:border-cyan-400 transition-colors"
           >
-            ALL STACKS
-            {selectedCategory === "ALL" && (
-              <motion.div
-                layoutId="compactCategoryUnderline"
-                className="absolute bottom-0 left-0 right-0 h-[2px] bg-cyan-400"
-              />
-            )}
-          </button>
+            <Sparkles className="w-5 h-5 text-cyan-400 mb-1 group-hover:rotate-12 transition-transform" />
+            <span className="font-display font-black text-xs sm:text-sm text-white tracking-wider">
+              SKILLEDHYRE
+            </span>
+            <span className="text-[9px] font-mono text-cyan-400 font-bold tracking-widest uppercase">
+              LABS
+            </span>
+          </motion.div>
 
-          {TECH_CATEGORIES.map((cat) => {
-            const isSelected = selectedCategory === cat;
-            return (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`pb-2.5 text-xs font-mono tracking-widest uppercase transition-all relative shrink-0 ${
-                  isSelected
-                    ? "text-cyan-400 font-bold"
-                    : "text-slate-400 hover:text-white"
-                }`}
-              >
-                {cat}
-                {isSelected && (
-                  <motion.div
-                    layoutId="compactCategoryUnderline"
-                    className="absolute bottom-0 left-0 right-0 h-[2px] bg-cyan-400"
-                  />
-                )}
-              </button>
-            );
-          })}
-        </div>
+          {/* 5 Orbiting Category System Nodes */}
+          <div className="absolute inset-0 z-20 pointer-events-none flex items-center justify-center">
+            {TECH_CATEGORIES.map((cat, idx) => {
+              const total = TECH_CATEGORIES.length;
+              const angle = (idx * (2 * Math.PI)) / total - Math.PI / 2; // top origin
+              const radius = 145; // sm screen radius
+              const isSelected = activeCategory === cat;
+              const Icon = CATEGORY_ICONS[cat];
 
-        {/* Compact Editorial Category Groups */}
-        <div className="space-y-10">
-          <AnimatePresence mode="wait">
-            {categoriesToShow.map((cat) => {
-              const categoryTechs = TECHNOLOGIES.filter((t) => t.category === cat);
-              if (categoryTechs.length === 0) return null;
+              // Calculate percentage positions for responsive layout
+              const leftPercent = 50 + Math.cos(angle) * 38;
+              const topPercent = 50 + Math.sin(angle) * 38;
 
               return (
-                <motion.div
+                <motion.button
                   key={cat}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.3 }}
-                  className="space-y-4"
+                  onClick={() => setActiveCategory(cat)}
+                  onMouseEnter={() => setActiveCategory(cat)}
+                  style={{
+                    left: `${leftPercent}%`,
+                    top: `${topPercent}%`,
+                    transform: "translate(-50%, -50%)",
+                  }}
+                  className={`absolute pointer-events-auto px-3.5 py-2.5 rounded-2xl border transition-all duration-300 flex items-center gap-2 cursor-pointer shadow-lg ${
+                    isSelected
+                      ? "bg-[#0F111A] border-cyan-400 text-white shadow-[0_0_25px_rgba(0,242,254,0.35)] scale-110 z-30"
+                      : "bg-white/[0.03] hover:bg-white/[0.08] border-white/10 text-slate-400 hover:text-white"
+                  }`}
                 >
-                  {/* Category Header */}
-                  <div className="flex items-center gap-3">
-                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />
-                    <h3 className="text-xs font-mono tracking-widest text-cyan-300 uppercase font-bold">
-                      {cat}
-                    </h3>
-                    <div className="h-px bg-white/10 flex-1" />
-                  </div>
-
-                  {/* Compact Multi-Column Grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-3">
-                    {categoryTechs.map((tech) => {
-                      const isHovered = hoveredTech === tech.name;
-                      const subtext = TECH_SUBTEXT[tech.name];
-
-                      return (
-                        <div
-                          key={tech.name}
-                          onMouseEnter={() => setHoveredTech(tech.name)}
-                          onMouseLeave={() => setHoveredTech(null)}
-                          className={`group py-2.5 px-3 rounded-xl border border-transparent transition-all duration-200 cursor-default flex flex-col justify-center ${
-                            isHovered
-                              ? "bg-white/[0.04] border-cyan-400/30"
-                              : hoveredTech
-                              ? "opacity-50"
-                              : "opacity-100"
-                          }`}
-                        >
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              <span
-                                className={`text-cyan-400 font-mono text-xs transition-opacity duration-200 ${
-                                  isHovered ? "opacity-100" : "opacity-0"
-                                }`}
-                              >
-                                •
-                              </span>
-                              <span
-                                className={`text-base sm:text-lg font-display font-semibold transition-colors duration-200 ${
-                                  isHovered ? "text-cyan-300 font-bold" : "text-slate-100"
-                                }`}
-                              >
-                                {tech.name}
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* Micro-Contextual Subtext On Hover */}
-                          <AnimatePresence>
-                            {isHovered && subtext && (
-                              <motion.span
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: "auto" }}
-                                exit={{ opacity: 0, height: 0 }}
-                                transition={{ duration: 0.15 }}
-                                className="text-[10px] font-mono text-cyan-400/80 mt-1 pl-4 block overflow-hidden"
-                              >
-                                {subtext}
-                              </motion.span>
-                            )}
-                          </AnimatePresence>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </motion.div>
+                  {Icon && <Icon className={`w-4 h-4 ${isSelected ? "text-cyan-400" : "text-slate-400"}`} />}
+                  <span className="text-xs font-mono font-bold tracking-wider uppercase whitespace-nowrap">
+                    {cat}
+                  </span>
+                </motion.button>
               );
             })}
-          </AnimatePresence>
+          </div>
+
+          {/* Active Category Technologies Revealed Dynamic Arc Badge Overlay */}
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-30 w-full max-w-xl text-center px-4">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeCategory}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+                className="glass-panel p-4 rounded-2xl border border-cyan-400/30 bg-[#0F111A]/95 shadow-2xl backdrop-blur-md"
+              >
+                <div className="flex items-center justify-between gap-2 mb-2 pb-1.5 border-b border-white/10">
+                  <span className="text-[10px] font-mono font-bold text-cyan-400 tracking-widest uppercase flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                    ACTIVE SYSTEM NODE: {activeCategory}
+                  </span>
+                  <span className="text-[10px] font-mono text-slate-400">
+                    {CATEGORY_MAP[activeCategory]?.length} Technologies
+                  </span>
+                </div>
+
+                <div className="flex flex-wrap items-center justify-center gap-2">
+                  {CATEGORY_MAP[activeCategory]?.map((techName) => (
+                    <span
+                      key={techName}
+                      className="px-3 py-1.5 rounded-xl bg-cyan-500/10 border border-cyan-400/30 text-white font-display font-semibold text-xs sm:text-sm hover:border-cyan-400 hover:bg-cyan-500/20 transition-all cursor-default"
+                    >
+                      {techName}
+                    </span>
+                  ))}
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+        </div>
+
+        {/* Compact Technology Summary Index below the Constellation */}
+        <div className="pt-8 border-t border-white/10 mt-6">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+            {TECH_CATEGORIES.map((cat) => {
+              const techs = CATEGORY_MAP[cat] || [];
+              const isSelected = activeCategory === cat;
+
+              return (
+                <div
+                  key={cat}
+                  onClick={() => setActiveCategory(cat)}
+                  className={`p-3 rounded-2xl border transition-all cursor-pointer ${
+                    isSelected
+                      ? "bg-cyan-500/10 border-cyan-400/40 text-cyan-300"
+                      : "bg-white/[0.02] border-white/5 text-slate-400 hover:border-white/20 hover:text-white"
+                  }`}
+                >
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-300">
+                      {cat}
+                    </span>
+                  </div>
+                  <p className="text-xs font-display text-slate-200 leading-snug line-clamp-2">
+                    {techs.join(" • ")}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
       </div>
