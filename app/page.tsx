@@ -18,8 +18,6 @@ import ProjectStarterModal from "@/components/ProjectStarterModal";
 import FloatingActionBar from "@/components/FloatingActionBar";
 import Footer from "@/components/Footer";
 
-import ParticleSystemCanvas from "@/components/ParticleSystemCanvas";
-
 export default function Home() {
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
 
@@ -33,9 +31,6 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-[#08090E] text-slate-100 selection:bg-cyan-500/30 selection:text-white relative">
-      {/* High-End Ambient Particle Transition Canvas */}
-      <ParticleSystemCanvas />
-
       {/* Glass Top Navbar */}
       <Navbar onOpenProjectModal={handleOpenProjectModal} />
 
