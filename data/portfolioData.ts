@@ -386,7 +386,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
   {
     id: "team-02",
     name: "Smita Kumari",
-    designation: "Director & Co-Founder | SkilledHyre Labs, SkilledHyre, Codzskill & StartupGaatha",
+    designation: "Co-Founder & Director | SkilledHyre Labs, SkilledHyre, Codzskill & StartupGaatha",
     category: "Leadership",
     experience: "10+ Years Experience",
     specialization: [
@@ -401,7 +401,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
     roleDescription: "Directs organizational scaling, talent operations, technical staffing frameworks, and skill bootcamps across SkilledHyre Labs, SkilledHyre, Codzskill, and StartupGaatha.",
     leadershipVision: "Focused on building skilled talent, delivering technology solutions, and creating industry-ready professionals across all ecosystem brands.",
     keyContributions: [
-      "Director & Co-Founder across SkilledHyre Labs, SkilledHyre, Codzskill & StartupGaatha ecosystems",
+      "Co-Founder & Director across SkilledHyre Labs, SkilledHyre, Codzskill & StartupGaatha ecosystems",
       "Architected tech staffing and talent development frameworks",
       "Spearheaded live project bootcamps and expert mentoring initiatives",
     ],
