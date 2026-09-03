@@ -37,43 +37,19 @@ export default function TestimonialsSection() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Top Header & Rating Summary */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-10">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/20 text-cyan-400 text-xs font-mono mb-3">
-              <CheckCircle2 className="w-3.5 h-3.5" /> CLIENT REVIEWS & VERIFIED RESULTS
-            </div>
-            <h2 className="text-3xl sm:text-5xl font-display font-black text-white tracking-tight">
-              TRUSTED BY GROWING BRANDS.
-              <span className="block text-gradient-cyan">MEASURED BY REAL IMPACT.</span>
-            </h2>
+        {/* Top Header Centered */}
+        <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-10">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/20 text-cyan-400 text-xs font-mono mb-3">
+            <CheckCircle2 className="w-3.5 h-3.5" /> CLIENT REVIEWS & VERIFIED RESULTS
           </div>
-
-          {/* Rating Badge & Add Review Button */}
-          <div className="flex flex-col sm:flex-row items-center gap-4">
-            <div className="px-4 py-2.5 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center gap-3">
-              <div className="flex items-center gap-1">
-                {[1, 2, 3, 4, 5].map((s) => (
-                  <Star key={s} className="w-4 h-4 fill-amber-400 text-amber-400" />
-                ))}
-              </div>
-              <div className="text-left">
-                <span className="block text-xs font-mono font-bold text-white">5.0 / 5.0 Rating</span>
-                <span className="block text-[10px] font-mono text-slate-400">27+ Verified Client Reviews</span>
-              </div>
-            </div>
-
-            <button
-              onClick={() => setIsSubmitModalOpen(true)}
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-cyan-400 to-blue-500 text-black font-display font-bold text-xs sm:text-sm hover:shadow-[0_0_25px_rgba(0,242,254,0.4)] transition-all transform active:scale-95"
-            >
-              <PlusCircle className="w-4 h-4" /> Add Your Review
-            </button>
-          </div>
+          <h2 className="text-3xl sm:text-5xl font-display font-black text-white tracking-tight">
+            TRUSTED BY GROWING BRANDS.
+            <span className="block text-gradient-cyan">MEASURED BY REAL IMPACT.</span>
+          </h2>
         </div>
 
-        {/* Category Filter Pills */}
-        <div className="flex flex-wrap items-center justify-start gap-2 mb-8 pb-4 border-b border-white/5">
+        {/* Category Filter Pills Centered */}
+        <div className="flex flex-wrap items-center justify-center gap-2 mb-8 pb-4 border-b border-white/5">
           {CATEGORIES.map((cat) => (
             <button
               key={cat}
