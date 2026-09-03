@@ -3,10 +3,10 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { TESTIMONIALS, CLIENT_LOGOS, Testimonial } from "@/data/portfolioData";
-import { Star, ChevronLeft, ChevronRight, Quote, PlusCircle, CheckCircle2, Building2, Sparkles, Grid, Layers } from "lucide-react";
+import { Star, ChevronLeft, ChevronRight, Quote, PlusCircle, CheckCircle2, Building2, Sparkles, Grid, Layers, ExternalLink } from "lucide-react";
 import SubmitReviewModal from "./SubmitReviewModal";
 
-const CATEGORIES = ["ALL", "AI & Automation", "Software Engineering", "Digital Marketing", "Tech Talent"] as const;
+const CATEGORIES = ["ALL", "Digital Marketing", "AI & Automation", "Software Engineering", "Tech Talent"] as const;
 
 export default function TestimonialsSection() {
   const [testimonialsList, setTestimonialsList] = useState<Testimonial[]>(TESTIMONIALS);
@@ -35,6 +35,14 @@ export default function TestimonialsSection() {
     if (foundIdx !== -1) {
       setCurrentIndex(foundIdx);
       setViewMode("carousel");
+    } else {
+      // If not in current category filter, switch to ALL first
+      setActiveCategory("ALL");
+      const idxInAll = testimonialsList.findIndex((t) => t.id === testimonialId);
+      if (idxInAll !== -1) {
+        setCurrentIndex(idxInAll);
+        setViewMode("carousel");
+      }
     }
   };
 
@@ -51,19 +59,20 @@ export default function TestimonialsSection() {
       <div className="absolute bottom-10 -right-32 w-96 h-96 bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Top Header Badge & Action Button */}
+        
+        {/* Top Header & Rating Summary */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-12">
           <div>
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/20 text-cyan-400 text-xs font-mono mb-3">
-              <CheckCircle2 className="w-3.5 h-3.5" /> CLIENT VERIFICATION & LOGOS
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/20 text-cyan-400 text-xs font-mono mb-3">
+              <CheckCircle2 className="w-3.5 h-3.5" /> CLIENT REVIEWS & VERIFIED RESULTS
             </div>
             <h2 className="text-3xl sm:text-5xl font-display font-black text-white tracking-tight">
-              BUILT WITH OUR CLIENTS.
-              <span className="block text-gradient-cyan">MEASURED BY REAL RESULTS.</span>
+              TRUSTED BY GROWING BRANDS.
+              <span className="block text-gradient-cyan">MEASURED BY REAL IMPACT.</span>
             </h2>
           </div>
 
-          {/* Action & Rating Summary */}
+          {/* Rating Badge & Add Review Button */}
           <div className="flex flex-col sm:flex-row items-center gap-4">
             <div className="px-4 py-2.5 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center gap-3">
               <div className="flex items-center gap-1">
@@ -72,8 +81,8 @@ export default function TestimonialsSection() {
                 ))}
               </div>
               <div className="text-left">
-                <span className="block text-xs font-mono font-bold text-white">4.9 / 5.0 Rating</span>
-                <span className="block text-[10px] font-mono text-slate-400">45+ Verified Client Reviews</span>
+                <span className="block text-xs font-mono font-bold text-white">5.0 / 5.0 Rating</span>
+                <span className="block text-[10px] font-mono text-slate-400">18+ Verified Client Reviews</span>
               </div>
             </div>
 
@@ -86,45 +95,43 @@ export default function TestimonialsSection() {
           </div>
         </div>
 
-        {/* Client Logos Wall with Interactive Click */}
-        <div className="mb-14">
-          <p className="text-center text-xs font-mono text-slate-400 uppercase tracking-widest mb-6">
-            ENTERPRISE PARTNERS & CLIENT LOGOS (Click a logo to view their testimonial)
+        {/* Clean & Sleek Client Logos Horizontal Filter Pills */}
+        <div className="mb-12">
+          <p className="text-center text-xs font-mono text-slate-400 uppercase tracking-widest mb-4">
+            ENTERPRISE & CLIENT BRANDS (Select a logo to view their testimonial)
           </p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-2.5 max-w-5xl mx-auto">
             {CLIENT_LOGOS.map((logo) => {
-              const isSelected = current?.companyLogoText === logo.label || current?.companyName.toUpperCase().includes(logo.name.toUpperCase());
+              const isSelected = current?.companyLogoText === logo.label || 
+                                 current?.companyName.toUpperCase() === logo.name.toUpperCase() ||
+                                 current?.id === logo.testimonialId;
+
               return (
                 <button
                   key={logo.name}
                   onClick={() => handleLogoClick(logo.testimonialId)}
-                  className={`group relative p-4 rounded-2xl border text-center transition-all duration-300 ${
+                  className={`px-3.5 py-2 rounded-2xl border text-xs font-mono font-bold transition-all duration-300 flex items-center gap-2.5 ${
                     isSelected
-                      ? "bg-cyan-500/15 border-cyan-400 shadow-[0_0_20px_rgba(0,242,254,0.2)]"
-                      : "bg-white/[0.02] border-white/5 hover:border-cyan-400/30 hover:bg-white/[0.04]"
+                      ? "bg-cyan-500/15 border-cyan-400 text-cyan-300 shadow-[0_0_20px_rgba(0,242,254,0.25)] scale-105"
+                      : "bg-white/[0.03] border-white/10 text-slate-300 hover:border-cyan-400/40 hover:bg-white/[0.06] hover:text-white"
                   }`}
                 >
-                  <div className="flex flex-col items-center justify-center gap-1.5">
-                    {logo.logoUrl ? (
-                      <img src={logo.logoUrl} alt={logo.name} className="w-6 h-6 object-contain rounded-md" />
-                    ) : (
-                      <Building2 className={`w-5 h-5 transition-colors ${isSelected ? "text-cyan-400" : "text-slate-500 group-hover:text-cyan-400"}`} />
-                    )}
-                    <span className={`font-mono text-xs font-bold tracking-wider block transition-colors ${isSelected ? "text-cyan-300" : "text-slate-300 group-hover:text-white"}`}>
-                      {logo.label}
-                    </span>
-                    <span className="text-[10px] font-mono text-slate-500 truncate max-w-full">
-                      {logo.industry}
-                    </span>
-                  </div>
+                  {logo.logoUrl ? (
+                    <div className="w-6 h-6 rounded-lg bg-white p-0.5 flex items-center justify-center shrink-0 shadow-sm overflow-hidden">
+                      <img src={logo.logoUrl} alt={logo.name} className="w-full h-full object-contain rounded" />
+                    </div>
+                  ) : (
+                    <Building2 className={`w-4 h-4 shrink-0 ${isSelected ? "text-cyan-400" : "text-slate-400"}`} />
+                  )}
+                  <span>{logo.name}</span>
                 </button>
               );
             })}
           </div>
         </div>
 
-        {/* Category Filters & View Mode Switcher */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-10 pb-4 border-b border-white/5">
+        {/* Category Filter Pills & Mode Switcher */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 pb-4 border-b border-white/5">
           {/* Category Tabs */}
           <div className="flex flex-wrap items-center gap-2">
             {CATEGORIES.map((cat) => (
@@ -145,7 +152,7 @@ export default function TestimonialsSection() {
             ))}
           </div>
 
-          {/* Toggle View Mode: Carousel vs Grid */}
+          {/* View Mode: Featured vs All */}
           <div className="flex items-center gap-1 bg-white/[0.03] p-1 rounded-xl border border-white/10">
             <button
               onClick={() => setViewMode("carousel")}
@@ -153,7 +160,7 @@ export default function TestimonialsSection() {
                 viewMode === "carousel" ? "bg-cyan-500/20 text-cyan-300 border border-cyan-400/30" : "text-slate-400 hover:text-white"
               }`}
             >
-              <Layers className="w-3.5 h-3.5" /> Featured
+              <Layers className="w-3.5 h-3.5" /> Featured Card
             </button>
             <button
               onClick={() => setViewMode("grid")}
@@ -161,7 +168,7 @@ export default function TestimonialsSection() {
                 viewMode === "grid" ? "bg-cyan-500/20 text-cyan-300 border border-cyan-400/30" : "text-slate-400 hover:text-white"
               }`}
             >
-              <Grid className="w-3.5 h-3.5" /> All Reviews ({filteredTestimonials.length})
+              <Grid className="w-3.5 h-3.5" /> Grid View ({filteredTestimonials.length})
             </button>
           </div>
         </div>
@@ -177,21 +184,23 @@ export default function TestimonialsSection() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.3 }}
-                  className="glass-panel p-8 sm:p-12 rounded-3xl border border-white/10 relative shadow-2xl space-y-6"
+                  className="glass-panel p-8 sm:p-12 rounded-3xl border border-cyan-500/20 relative shadow-2xl space-y-6 bg-[#0F111A]"
                 >
                   {/* Top Bar: Company Logo & Rating */}
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
                       {current.companyLogo ? (
-                        <div className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-xl bg-cyan-500/10 border border-cyan-400/30">
-                          <img src={current.companyLogo} alt={current.companyName} className="w-6 h-6 object-contain rounded-md" />
-                          <span className="text-cyan-400 font-mono text-sm font-bold tracking-widest">
-                            {current.companyLogoText || current.companyName.toUpperCase()}
+                        <div className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-xl bg-white/10 border border-white/20">
+                          <div className="w-7 h-7 rounded-lg bg-white p-1 flex items-center justify-center shrink-0">
+                            <img src={current.companyLogo} alt={current.companyName} className="w-full h-full object-contain" />
+                          </div>
+                          <span className="text-cyan-300 font-mono text-sm font-bold tracking-wider">
+                            {current.companyName.toUpperCase()}
                           </span>
                         </div>
                       ) : (
                         <div className="px-4 py-1.5 rounded-xl bg-cyan-500/10 border border-cyan-400/30 text-cyan-400 font-mono text-sm font-bold tracking-widest">
-                          {current.companyLogoText || current.companyName.toUpperCase()}
+                          {current.companyName.toUpperCase()}
                         </div>
                       )}
                       <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-slate-400 text-xs font-mono">
@@ -206,10 +215,10 @@ export default function TestimonialsSection() {
                     </div>
                   </div>
 
-                  <Quote className="w-10 h-10 text-cyan-400/20" />
+                  <Quote className="w-10 h-10 text-cyan-400/25" />
 
                   {/* Quote */}
-                  <p className="text-xl sm:text-2xl font-display font-medium text-white leading-relaxed">
+                  <p className="text-lg sm:text-xl font-display font-medium text-slate-100 leading-relaxed italic">
                     "{current.quote}"
                   </p>
 
@@ -232,13 +241,13 @@ export default function TestimonialsSection() {
                         </h4>
                         <p className="text-xs font-mono text-slate-400">
                           {current.clientTitle} •{" "}
-                          <span className="text-cyan-400">{current.companyName}</span>
+                          <span className="text-cyan-400 font-bold">{current.companyName}</span>
                         </p>
                       </div>
                     </div>
 
-                    <div className="px-4 py-2 rounded-xl bg-cyan-500/10 border border-cyan-400/30 text-cyan-400 text-xs font-mono font-bold flex items-center gap-2">
-                      <Sparkles className="w-3.5 h-3.5" /> KEY OUTCOME: {current.metricsResult}
+                    <div className="px-4 py-2 rounded-xl bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 text-xs font-mono font-bold flex items-center gap-2">
+                      <Sparkles className="w-3.5 h-3.5 text-cyan-400" /> DELIVERED: {current.metricsResult}
                     </div>
                   </div>
                 </motion.div>
@@ -254,7 +263,7 @@ export default function TestimonialsSection() {
                 <ChevronLeft className="w-5 h-5" />
               </button>
               <span className="text-xs font-mono text-slate-400">
-                0{safeIndex + 1} / 0{filteredTestimonials.length}
+                0{safeIndex + 1} / {filteredTestimonials.length < 10 ? `0${filteredTestimonials.length}` : filteredTestimonials.length}
               </span>
               <button
                 onClick={handleNext}
@@ -274,13 +283,20 @@ export default function TestimonialsSection() {
                 key={item.id}
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="glass-panel p-6 rounded-2xl border border-white/10 flex flex-col justify-between hover:border-cyan-400/40 transition-colors"
+                className="glass-panel p-6 rounded-2xl border border-white/10 flex flex-col justify-between hover:border-cyan-400/40 transition-colors bg-[#0F111A]"
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="px-3 py-1 rounded-lg bg-cyan-500/10 border border-cyan-400/30 text-cyan-400 font-mono text-xs font-bold">
-                      {item.companyLogoText || item.companyName.toUpperCase()}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      {item.companyLogo ? (
+                        <div className="w-6 h-6 rounded bg-white p-0.5 flex items-center justify-center shrink-0">
+                          <img src={item.companyLogo} alt={item.companyName} className="w-full h-full object-contain" />
+                        </div>
+                      ) : null}
+                      <span className="px-2.5 py-1 rounded-lg bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 font-mono text-xs font-bold">
+                        {item.companyName.toUpperCase()}
+                      </span>
+                    </div>
                     <div className="flex items-center gap-0.5">
                       {Array.from({ length: item.rating }).map((_, i) => (
                         <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
@@ -288,7 +304,7 @@ export default function TestimonialsSection() {
                     </div>
                   </div>
 
-                  <p className="text-sm font-display text-slate-200 italic leading-relaxed">
+                  <p className="text-xs font-display text-slate-200 italic leading-relaxed line-clamp-5">
                     "{item.quote}"
                   </p>
                 </div>
