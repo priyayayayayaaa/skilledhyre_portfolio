@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { X, CheckCircle2, Sparkles, Send, Loader2, AlertCircle } from "lucide-react";
 import confetti from "canvas-confetti";
 
@@ -21,7 +21,6 @@ const SERVICES_OPTIONS = [
 
 export default function ProjectStarterModal({ isOpen, onClose }: ProjectStarterModalProps) {
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
-  const [selectedBudget, setSelectedBudget] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -61,7 +60,6 @@ export default function ProjectStarterModal({ isOpen, onClose }: ProjectStarterM
           email: formData.email,
           company: formData.company,
           capabilities: selectedServices,
-          budget: selectedBudget,
           projectDescription: formData.message,
         }),
       });
@@ -153,25 +151,10 @@ export default function ProjectStarterModal({ isOpen, onClose }: ProjectStarterM
                 </div>
               </div>
 
-              {/* Step 2: Free-Text Budget Input */}
-              <div>
-                <label className="text-xs font-mono text-slate-400 uppercase tracking-widest block mb-2">
-                  02. ESTIMATED BUDGET
-                </label>
-                <input
-                  type="text"
-                  disabled={isSubmitting}
-                  placeholder="e.g. $35,000, ₹25 lakh, Flexible, Not decided yet..."
-                  value={selectedBudget}
-                  onChange={(e) => setSelectedBudget(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-slate-500 text-sm focus:outline-none focus:border-cyan-400 font-mono disabled:opacity-50"
-                />
-              </div>
-
-              {/* Step 3: Contact Info */}
+              {/* Step 2: Contact Info */}
               <div className="space-y-3">
                 <label className="text-xs font-mono text-slate-400 uppercase tracking-widest block">
-                  03. CONTACT DETAILS
+                  02. CONTACT DETAILS
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <input
