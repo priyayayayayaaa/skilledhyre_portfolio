@@ -17,15 +17,22 @@ enum InquiryStatus {
   CLOSED
 }
 
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
 model ProjectInquiry {
-  id                 String        @id @default(uuid())
+  id                 String             @id @default(uuid())
   name               String
   email              String
   company            String?
   capabilities       String[]
   budget             String?
   projectDescription String?
-  status             InquiryStatus @default(NEW)
-  createdAt          DateTime      @default(now())
-  updatedAt          DateTime      @updatedAt
+  status             InquiryStatus      @default(NEW)
+  notificationStatus NotificationStatus @default(PENDING)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
 }

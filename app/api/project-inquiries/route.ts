@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validateProjectInquiryInput } from "@/lib/validations/projectInquiry";
 import { checkRateLimit, validatePayloadSize } from "@/lib/security/rateLimiter";
-import { saveProjectInquiry } from "@/lib/db";
+import { saveProjectInquiry, updateInquiryNotificationStatus, NotificationStatus } from "@/lib/db";
 import { sendInquiryNotificationEmail } from "@/lib/email/inquiryNotification";
 
 export async function POST(req: NextRequest) {
@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 2. Client Identifier & Rate Limiting
+    // 2. Client Rate Limiting (5 requests / 15 mins per IP)
     const clientIp =
       req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
       req.headers.get("x-real-ip") ||
@@ -68,15 +68,24 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 5. Persist Inquiry to Database (Default status: NEW)
+    // 5. Persist Inquiry to Database (Primary Source of Truth: status = NEW, notificationStatus = PENDING)
     const inquiryRecord = await saveProjectInquiry(validation.sanitizedData);
 
-    // 6. Trigger Fail-Safe Email Notification
-    sendInquiryNotificationEmail(inquiryRecord).catch((emailErr) => {
-      console.error("[Email Dispatch Error] Non-blocking email error:", emailErr);
-    });
+    // 6. Attempt Resend Email Notification Layer
+    try {
+      const emailResult = await sendInquiryNotificationEmail(inquiryRecord);
+      if (emailResult.sent) {
+        await updateInquiryNotificationStatus(inquiryRecord.id, NotificationStatus.SENT);
+      } else {
+        await updateInquiryNotificationStatus(inquiryRecord.id, NotificationStatus.FAILED);
+        console.warn(`[Notification Warning] Email delivery failed for inquiry ${inquiryRecord.id}: ${emailResult.error}`);
+      }
+    } catch (emailErr: any) {
+      await updateInquiryNotificationStatus(inquiryRecord.id, NotificationStatus.FAILED);
+      console.error(`[Notification Exception] Failed notification attempt for inquiry ${inquiryRecord.id}:`, emailErr?.message || emailErr);
+    }
 
-    // 7. Return HTTP 201 Success Response
+    // 7. Return HTTP 201 Success (Database storage succeeded)
     return NextResponse.json(
       {
         success: true,

@@ -8,6 +8,12 @@ export enum InquiryStatus {
   CLOSED = "CLOSED",
 }
 
+export enum NotificationStatus {
+  PENDING = "PENDING",
+  SENT = "SENT",
+  FAILED = "FAILED",
+}
+
 export interface CreateInquiryInput {
   name: string;
   email: string;
@@ -26,6 +32,7 @@ export interface ProjectInquiryRecord {
   budget: string | null;
   projectDescription: string | null;
   status: InquiryStatus;
+  notificationStatus: NotificationStatus;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -36,7 +43,6 @@ function getPrismaClient() {
   if (prismaClientInstance) return prismaClientInstance;
   if (!process.env.DATABASE_URL) return null;
   try {
-    // Dynamically load PrismaClient if available
     const { PrismaClient } = require("@prisma/client");
     prismaClientInstance = new PrismaClient({
       log: process.env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
@@ -53,7 +59,8 @@ const memoryInquiries: ProjectInquiryRecord[] = [];
 
 /**
  * Persists a new Project Inquiry to PostgreSQL via Prisma.
- * Falls back gracefully to memory store if DATABASE_URL is not set during local dev/testing.
+ * Initial status: NEW
+ * Initial notificationStatus: PENDING
  */
 export async function saveProjectInquiry(input: CreateInquiryInput): Promise<ProjectInquiryRecord> {
   const normalizedEmail = input.email.trim().toLowerCase();
@@ -70,11 +77,13 @@ export async function saveProjectInquiry(input: CreateInquiryInput): Promise<Pro
           budget: input.budget?.trim() || null,
           projectDescription: input.projectDescription?.trim() || null,
           status: InquiryStatus.NEW,
+          notificationStatus: NotificationStatus.PENDING,
         },
       });
       return {
         ...record,
         status: (record.status as InquiryStatus) || InquiryStatus.NEW,
+        notificationStatus: (record.notificationStatus as NotificationStatus) || NotificationStatus.PENDING,
       };
     } catch (error) {
       console.error("[Database Error] Failed to persist inquiry via Prisma:", error);
@@ -93,10 +102,40 @@ export async function saveProjectInquiry(input: CreateInquiryInput): Promise<Pro
       budget: input.budget?.trim() || null,
       projectDescription: input.projectDescription?.trim() || null,
       status: InquiryStatus.NEW,
+      notificationStatus: NotificationStatus.PENDING,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
     memoryInquiries.push(record);
     return record;
+  }
+}
+
+/**
+ * Updates the notificationStatus (SENT or FAILED) of a stored Project Inquiry.
+ */
+export async function updateInquiryNotificationStatus(
+  id: string,
+  notificationStatus: NotificationStatus
+): Promise<void> {
+  const prisma = getPrismaClient();
+
+  if (prisma && process.env.DATABASE_URL) {
+    try {
+      await prisma.projectInquiry.update({
+        where: { id },
+        data: { notificationStatus },
+      });
+      console.info(`[Database Info] Updated notificationStatus for ${id} to ${notificationStatus}`);
+    } catch (error) {
+      console.error(`[Database Error] Failed to update notificationStatus for ${id}:`, error);
+    }
+  } else {
+    const item = memoryInquiries.find((m) => m.id === id);
+    if (item) {
+      item.notificationStatus = notificationStatus;
+      item.updatedAt = new Date();
+      console.info(`[Memory Store Info] Updated notificationStatus for ${id} to ${notificationStatus}`);
+    }
   }
 }
