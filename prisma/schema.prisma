@@ -1,0 +1,31 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum InquiryStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  PROPOSAL_SENT
+  WON
+  LOST
+  CLOSED
+}
+
+model ProjectInquiry {
+  id                 String        @id @default(uuid())
+  name               String
+  email              String
+  company            String?
+  capabilities       String[]
+  budget             String?
+  projectDescription String?
+  status             InquiryStatus @default(NEW)
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+}
