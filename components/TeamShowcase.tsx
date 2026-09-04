@@ -6,7 +6,7 @@ import { TEAM_MEMBERS, TeamMember } from "@/data/portfolioData";
 import { Linkedin, Twitter, Sparkles } from "lucide-react";
 import TeamMemberModal from "./TeamMemberModal";
 
-const CATEGORIES = ["ALL", "Leadership", "Technology", "Design", "Marketing", "Growth"];
+const CATEGORIES = ["ALL", ...Array.from(new Set(TEAM_MEMBERS.map((m) => m.category)))];
 
 export default function TeamShowcase() {
   const [selectedCategory, setSelectedCategory] = useState("ALL");
